@@ -308,16 +308,16 @@
                         </Button.Style>
                     </Button>
                     
-                    <Button x:Name="LoadDefaultCuesButton" 
-                           Content="Load Default Cues" 
-                           Width="160" 
+                    <Button x:Name="ResetToDefaultButton" 
+                           Content="Reset to Default" 
+                           Width="150" 
                            Height="38"
-                           FontSize="14"
+                           FontSize="13"
                            Margin="10,0,0,0"
-                           Click="LoadDefaultCuesButton_Click">
+                           Click="ResetToDefaultButton_Click">
                         <Button.Style>
                             <Style TargetType="Button">
-                                <Setter Property="Background" Value="#10B981"/>
+                                <Setter Property="Background" Value="#9CA3AF"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="BorderThickness" Value="0"/>
                                 <Setter Property="Cursor" Value="Hand"/>
@@ -335,7 +335,7 @@
                                 </Setter>
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#059669"/>
+                                        <Setter Property="Background" Value="#6B7280"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>

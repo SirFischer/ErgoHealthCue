@@ -166,32 +166,26 @@ public partial class SettingsWindow : Window
         }
     }
 
-    private void LoadDefaultCuesButton_Click(object sender, RoutedEventArgs e)
+    private void ResetToDefaultButton_Click(object sender, RoutedEventArgs e)
     {
         var result = MessageBox.Show(
-            "This will add all default cues to your collection. Existing cues will not be removed.\n\nDo you want to continue?",
-            "Load Default Cues",
+            "This will REPLACE all your cues with the factory default cues. All custom cues will be lost.\n\nDo you want to continue?",
+            "Reset to Default Cues",
             MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
+            MessageBoxImage.Warning);
             
         if (result == MessageBoxResult.Yes)
         {
+            _allCues.Clear();
             var defaultCues = _dataService.GetDefaultCues();
-            int addedCount = 0;
             
-            foreach (var defaultCue in defaultCues)
+            foreach (var cue in defaultCues)
             {
-                // Check if a cue with the same title already exists
-                bool exists = _allCues.Any(c => c.Title == defaultCue.Title);
-                if (!exists)
-                {
-                    _allCues.Add(defaultCue);
-                    addedCount++;
-                }
+                _allCues.Add(cue);
             }
             
             FilterCues();
-            MessageBox.Show($"Added {addedCount} new default cues.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Reset to {defaultCues.Count} default cues.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

@@ -34,10 +34,14 @@
   <data name="Cues" xml:space="preserve"><value>Påminnelser</value></data>
   <data name="AddNewCue" xml:space="preserve"><value>+ Legg til ny påminnelse</value></data>
   <data name="RemoveSelected" xml:space="preserve"><value>Fjern valgt</value></data>
+  <data name="LoadDefaultCues" xml:space="preserve"><value>Last inn standardpåminnelser</value></data>
   <data name="ViewStatistics" xml:space="preserve"><value>Vis statistikk</value></data>
   <data name="SaveChanges" xml:space="preserve"><value>Lagre endringer</value></data>
   <data name="Cancel" xml:space="preserve"><value>Avbryt</value></data>
   <data name="Showing" xml:space="preserve"><value>Viser</value></data>
+  <data name="Language" xml:space="preserve"><value>Språk</value></data>
+  <data name="LanguageDesc" xml:space="preserve"><value>Velg ditt foretrukne språk:</value></data>
+  <data name="LanguageNote" xml:space="preserve"><value>Merk: Start applikasjonen på nytt for at språkendring skal tre i kraft</value></data>
   
   <data name="StatisticsTitle" xml:space="preserve"><value>Statistikk</value></data>
   <data name="StatisticsSubtitle" xml:space="preserve"><value>Se din ergonomiske aktivitetshistorikk</value></data>
@@ -63,4 +67,9 @@
   <data name="DateTime" xml:space="preserve"><value>Dato/Tid</value></data>
   <data name="Status" xml:space="preserve"><value>Status</value></data>
   <data name="ResponseTime" xml:space="preserve"><value>Svartid</value></data>
+  
+  <data name="LoadDefaultCuesPrompt" xml:space="preserve"><value>Dette vil legge til alle standardpåminnelser i samlingen din. Eksisterende påminnelser vil ikke bli fjernet.\n\nVil du fortsette?</value></data>
+  <data name="LoadDefaultCuesTitle" xml:space="preserve"><value>Last inn standardpåminnelser</value></data>
+  <data name="CuesAddedMessage" xml:space="preserve"><value>La til {0} nye standardpåminnelser.</value></data>
+  <data name="Success" xml:space="preserve"><value>Vellykket</value></data>
 </root>

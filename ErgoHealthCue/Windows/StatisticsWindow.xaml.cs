@@ -48,7 +48,7 @@ public partial class StatisticsWindow : Window
 
     private void LoadStatistics()
     {
-        if (_allStatistics == null) return;
+        if (_allStatistics == null || TotalCuesText == null) return;
         
         // Filter by selected time period
         var filteredStatistics = FilterByTimePeriod(_allStatistics);
@@ -125,5 +125,26 @@ public partial class StatisticsWindow : Window
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var result = System.Windows.MessageBox.Show(
+            "Are you sure you want to permanently delete all statistics?\n\nThis action cannot be undone.",
+            "Reset Statistics",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+            
+        if (result == System.Windows.MessageBoxResult.Yes)
+        {
+            _allStatistics.Clear();
+            _dataService.SaveStatistics(_allStatistics);
+            LoadStatistics();
+            System.Windows.MessageBox.Show(
+                "All statistics have been reset.",
+                "Success",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Information);
+        }
     }
 }
