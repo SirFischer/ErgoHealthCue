@@ -13,7 +13,7 @@ public class CueScheduler
     private Guid? _lastExerciseCueId;
     private Guid? _lastPositionCueId;
     
-    private static readonly CueType[] PositionChangeCueTypes = new[]
+    private static readonly HashSet<CueType> PositionChangeCueTypes = new()
     {
         CueType.DeskStanding,
         CueType.DeskSitting,

@@ -115,13 +115,13 @@ public partial class SettingsWindow : Window
         // Determine the appropriate cue type based on current filter
         CueType defaultType = CueType.SittingStretch;
         
-        if (StandingRadio.IsChecked == true)
+        if (StandingRadio?.IsChecked == true)
             defaultType = CueType.StandingStretch;
-        else if (SittingRadio.IsChecked == true)
+        else if (SittingRadio?.IsChecked == true)
             defaultType = CueType.SittingStretch;
-        else if (FloorRadio.IsChecked == true)
+        else if (FloorRadio?.IsChecked == true)
             defaultType = CueType.FloorStretch;
-        else if (PositionChangesRadio.IsChecked == true)
+        else if (PositionChangesRadio?.IsChecked == true)
             defaultType = CueType.DeskStanding;
         
         var addCueWindow = new AddCueWindow(defaultType);
