@@ -19,5 +19,6 @@ public class AppSettings
     
     public bool StartOnWindowsStartup { get; set; } = false;
     public DeskPosition CurrentPosition { get; set; } = DeskPosition.Sitting;
+    public string Language { get; set; } = "auto"; // "auto", "no", "en", "fr"
     public List<Cue> Cues { get; set; } = new();
 }

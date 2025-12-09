@@ -53,6 +53,11 @@ public class DataService
         File.WriteAllText(_settingsPath, json);
     }
 
+    public List<Cue> GetDefaultCues()
+    {
+        return CreateDefaultCues();
+    }
+
     private AppSettings CreateDefaultSettings()
     {
         return new AppSettings
@@ -68,11 +73,18 @@ public class DataService
             FloorPositionAvailable = true,
             StartOnWindowsStartup = false,
             CurrentPosition = DeskPosition.Sitting,
-            Cues = new List<Cue>
-            {
-                // Position changes
-                new() { Type = CueType.DeskStanding, Title = "Stand Up", Description = "Raise your desk to standing position" },
-                new() { Type = CueType.DeskSitting, Title = "Sit Down", Description = "Lower your desk to sitting position" },
+            Language = "auto",
+            Cues = CreateDefaultCues()
+        };
+    }
+
+    private List<Cue> CreateDefaultCues()
+    {
+        return new List<Cue>
+        {
+            // Position changes
+            new() { Type = CueType.DeskStanding, Title = "Stand Up", Description = "Raise your desk to standing position" },
+            new() { Type = CueType.DeskSitting, Title = "Sit Down", Description = "Lower your desk to sitting position" },
                 new() { Type = CueType.DeskFloor, Title = "Floor Position", Description = "Lower your desk all the way down" },
                 
                 // Standing position exercises - More dynamic and unrestricted
@@ -138,7 +150,6 @@ public class DataService
                 new() { Type = CueType.FloorMobilityDrill, Title = "Cossack Squats", Description = "Wide stance, shift weight side to side, straighten one leg, 10 each side" },
                 new() { Type = CueType.FloorMobilityDrill, Title = "Frog Pumps", Description = "Lie on back, soles of feet together, lift hips up and down, 15 reps" },
                 new() { Type = CueType.FloorMobilityDrill, Title = "Glute Bridges", Description = "Lie on back, feet flat, lift hips up, squeeze glutes, 15 reps" }
-            }
         };
     }
 

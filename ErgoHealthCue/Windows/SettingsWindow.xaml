@@ -170,30 +170,29 @@
             </StackPanel>
         </GroupBox>
         
-        <!-- Position Availability -->
-        <GroupBox Grid.Row="3" Header="Available Positions" Style="{StaticResource ModernGroupBox}">
+        <!-- Language Selection -->
+        <GroupBox Grid.Row="3" Header="Language / Språk / Langue" Style="{StaticResource ModernGroupBox}">
             <StackPanel>
-                <TextBlock Text="Select which desk positions are available for your setup:" 
+                <TextBlock Text="Select your preferred language:" 
                           FontSize="13" 
                           Foreground="#6B7280" 
                           Margin="0,0,0,10"/>
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox x:Name="StandingAvailableCheckBox" 
-                             Content="Standing Position" 
-                             FontSize="14"
-                             Foreground="#374151"
-                             Margin="0,0,20,0"/>
-                    <CheckBox x:Name="SittingAvailableCheckBox" 
-                             Content="Sitting Position" 
-                             FontSize="14"
-                             Foreground="#374151"
-                             IsChecked="True"
-                             Margin="0,0,20,0"/>
-                    <CheckBox x:Name="FloorAvailableCheckBox" 
-                             Content="Floor Position" 
-                             FontSize="14"
-                             Foreground="#374151"/>
-                </StackPanel>
+                <ComboBox x:Name="LanguageComboBox" 
+                         Width="200"
+                         Height="38"
+                         FontSize="14"
+                         HorizontalAlignment="Left"
+                         SelectedIndex="0">
+                    <ComboBoxItem Content="Auto (System Language)" Tag="auto"/>
+                    <ComboBoxItem Content="Norsk (Norwegian)" Tag="no"/>
+                    <ComboBoxItem Content="English" Tag="en"/>
+                    <ComboBoxItem Content="Français (French)" Tag="fr"/>
+                </ComboBox>
+                <TextBlock Text="Note: Restart application for language change to take effect" 
+                          FontSize="12" 
+                          Foreground="#9CA3AF" 
+                          FontStyle="Italic"
+                          Margin="0,10,0,0"/>
             </StackPanel>
         </GroupBox>
         
@@ -303,6 +302,40 @@
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="#E5E7EB"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    <Button x:Name="LoadDefaultCuesButton" 
+                           Content="Load Default Cues" 
+                           Width="160" 
+                           Height="38"
+                           FontSize="14"
+                           Margin="10,0,0,0"
+                           Click="LoadDefaultCuesButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#10B981"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                   CornerRadius="8"
+                                                   Padding="15,8">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#059669"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>

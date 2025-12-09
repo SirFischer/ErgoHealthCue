@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ErgoHealthCue.Models;
@@ -34,12 +35,18 @@ public partial class SettingsWindow : Window
         MinPositionIntervalTextBox.Text = _settings.MinPositionIntervalMinutes.ToString();
         MaxPositionIntervalTextBox.Text = _settings.MaxPositionIntervalMinutes.ToString();
         
-        // Load position availability
-        StandingAvailableCheckBox.IsChecked = _settings.StandingPositionAvailable;
-        SittingAvailableCheckBox.IsChecked = _settings.SittingPositionAvailable;
-        FloorAvailableCheckBox.IsChecked = _settings.FloorPositionAvailable;
-        
         StartupCheckBox.IsChecked = _startupService.IsStartupEnabled();
+        
+        // Load language setting
+        string language = _settings.Language ?? "auto";
+        for (int i = 0; i < LanguageComboBox.Items.Count; i++)
+        {
+            if (LanguageComboBox.Items[i] is ComboBoxItem item && item.Tag?.ToString() == language)
+            {
+                LanguageComboBox.SelectedIndex = i;
+                break;
+            }
+        }
         
         // Set current position
         switch (_settings.CurrentPosition)
@@ -159,6 +166,35 @@ public partial class SettingsWindow : Window
         }
     }
 
+    private void LoadDefaultCuesButton_Click(object sender, RoutedEventArgs e)
+    {
+        var result = MessageBox.Show(
+            "This will add all default cues to your collection. Existing cues will not be removed.\n\nDo you want to continue?",
+            "Load Default Cues",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+            
+        if (result == MessageBoxResult.Yes)
+        {
+            var defaultCues = _dataService.GetDefaultCues();
+            int addedCount = 0;
+            
+            foreach (var defaultCue in defaultCues)
+            {
+                // Check if a cue with the same title already exists
+                bool exists = _allCues.Any(c => c.Title == defaultCue.Title);
+                if (!exists)
+                {
+                    _allCues.Add(defaultCue);
+                    addedCount++;
+                }
+            }
+            
+            FilterCues();
+            MessageBox.Show($"Added {addedCount} new default cues.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
     private void ViewStatsButton_Click(object sender, RoutedEventArgs e)
     {
         var statsWindow = new StatisticsWindow(_dataService);
@@ -202,10 +238,11 @@ public partial class SettingsWindow : Window
         _settings.MinPositionIntervalMinutes = minPositionInterval;
         _settings.MaxPositionIntervalMinutes = maxPositionInterval;
         
-        // Update position availability
-        _settings.StandingPositionAvailable = StandingAvailableCheckBox.IsChecked ?? true;
-        _settings.SittingPositionAvailable = SittingAvailableCheckBox.IsChecked ?? true;
-        _settings.FloorPositionAvailable = FloorAvailableCheckBox.IsChecked ?? true;
+        // Save language preference
+        if (LanguageComboBox.SelectedItem is ComboBoxItem selectedLanguage)
+        {
+            _settings.Language = selectedLanguage.Tag?.ToString() ?? "auto";
+        }
         
         _settings.Cues = _allCues.ToList();
         
