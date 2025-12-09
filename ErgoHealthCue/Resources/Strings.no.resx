@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  
+  <data name="AppTitle" xml:space="preserve"><value>ErgoHealthCue</value></data>
+  <data name="Settings" xml:space="preserve"><value>Innstillinger</value></data>
+  <data name="Statistics" xml:space="preserve"><value>Statistikk</value></data>
+  <data name="Exit" xml:space="preserve"><value>Avslutt</value></data>
+  <data name="TriggerCueNow" xml:space="preserve"><value>Utløs påminnelse nå</value></data>
+  
+  <data name="SettingsTitle" xml:space="preserve"><value>Innstillinger</value></data>
+  <data name="SettingsSubtitle" xml:space="preserve"><value>Konfigurer dine ergonomiske påminnelser</value></data>
+  <data name="ExerciseIntervals" xml:space="preserve"><value>Øvelsesintervaller</value></data>
+  <data name="UseRandomIntervals" xml:space="preserve"><value>Bruk tilfeldige intervaller</value></data>
+  <data name="MinimumInterval" xml:space="preserve"><value>Minimum intervall (minutter)</value></data>
+  <data name="MaximumInterval" xml:space="preserve"><value>Maksimum intervall (minutter)</value></data>
+  <data name="PositionChangeIntervals" xml:space="preserve"><value>Posisjonsendring intervaller</value></data>
+  <data name="UseRandomPositionIntervals" xml:space="preserve"><value>Bruk tilfeldige posisjonsendringer</value></data>
+  <data name="StartWithWindows" xml:space="preserve"><value>Start med Windows</value></data>
+  <data name="AvailablePositions" xml:space="preserve"><value>Tilgjengelige posisjoner</value></data>
+  <data name="AvailablePositionsDesc" xml:space="preserve"><value>Velg hvilke pultposisjoner som er tilgjengelige:</value></data>
+  <data name="StandingPosition" xml:space="preserve"><value>Stående posisjon</value></data>
+  <data name="SittingPosition" xml:space="preserve"><value>Sittende posisjon</value></data>
+  <data name="FloorPosition" xml:space="preserve"><value>Gulvposisjon</value></data>
+  <data name="ManageCuesByPosition" xml:space="preserve"><value>Administrer påminnelser etter posisjon</value></data>
+  <data name="SelectPositionDesc" xml:space="preserve"><value>Velg posisjon for å se og administrere spesifikke påminnelser:</value></data>
+  <data name="Standing" xml:space="preserve"><value>Stående</value></data>
+  <data name="Sitting" xml:space="preserve"><value>Sittende</value></data>
+  <data name="Floor" xml:space="preserve"><value>Gulv</value></data>
+  <data name="PositionChanges" xml:space="preserve"><value>Posisjonsendringer</value></data>
+  <data name="Cues" xml:space="preserve"><value>Påminnelser</value></data>
+  <data name="AddNewCue" xml:space="preserve"><value>+ Legg til ny påminnelse</value></data>
+  <data name="RemoveSelected" xml:space="preserve"><value>Fjern valgt</value></data>
+  <data name="ViewStatistics" xml:space="preserve"><value>Vis statistikk</value></data>
+  <data name="SaveChanges" xml:space="preserve"><value>Lagre endringer</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="Showing" xml:space="preserve"><value>Viser</value></data>
+  
+  <data name="StatisticsTitle" xml:space="preserve"><value>Statistikk</value></data>
+  <data name="StatisticsSubtitle" xml:space="preserve"><value>Se din ergonomiske aktivitetshistorikk</value></data>
+  <data name="TimePeriod" xml:space="preserve"><value>Tidsperiode</value></data>
+  <data name="Today" xml:space="preserve"><value>I dag</value></data>
+  <data name="ThisWeek" xml:space="preserve"><value>Denne uken</value></data>
+  <data name="ThisMonth" xml:space="preserve"><value>Denne måneden</value></data>
+  <data name="ThisYear" xml:space="preserve"><value>Dette året</value></data>
+  <data name="AllTime" xml:space="preserve"><value>All tid</value></data>
+  <data name="TotalCues" xml:space="preserve"><value>Totale påminnelser</value></data>
+  <data name="Completed" xml:space="preserve"><value>Fullført</value></data>
+  <data name="Dismissed" xml:space="preserve"><value>Avvist</value></data>
+  <data name="History" xml:space="preserve"><value>Historikk</value></data>
+  <data name="Close" xml:space="preserve"><value>Lukk</value></data>
+  
+  <data name="Complete" xml:space="preserve"><value>✓ Fullført</value></data>
+  <data name="Dismiss" xml:space="preserve"><value>✕ Avvis</value></data>
+  
+  <data name="Enabled" xml:space="preserve"><value>Aktivert</value></data>
+  <data name="Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Title" xml:space="preserve"><value>Tittel</value></data>
+  <data name="Description" xml:space="preserve"><value>Beskrivelse</value></data>
+  <data name="DateTime" xml:space="preserve"><value>Dato/Tid</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="ResponseTime" xml:space="preserve"><value>Svartid</value></data>
+</root>

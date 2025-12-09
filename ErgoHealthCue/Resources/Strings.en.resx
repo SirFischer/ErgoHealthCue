@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  
+  <data name="AppTitle" xml:space="preserve"><value>ErgoHealthCue</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Statistics" xml:space="preserve"><value>Statistics</value></data>
+  <data name="Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="TriggerCueNow" xml:space="preserve"><value>Trigger Cue Now</value></data>
+  
+  <data name="SettingsTitle" xml:space="preserve"><value>Settings</value></data>
+  <data name="SettingsSubtitle" xml:space="preserve"><value>Configure your ergonomic reminder preferences</value></data>
+  <data name="ExerciseIntervals" xml:space="preserve"><value>Exercise Intervals</value></data>
+  <data name="UseRandomIntervals" xml:space="preserve"><value>Use Random Exercise Intervals</value></data>
+  <data name="MinimumInterval" xml:space="preserve"><value>Minimum Interval (minutes)</value></data>
+  <data name="MaximumInterval" xml:space="preserve"><value>Maximum Interval (minutes)</value></data>
+  <data name="PositionChangeIntervals" xml:space="preserve"><value>Position Change Intervals</value></data>
+  <data name="UseRandomPositionIntervals" xml:space="preserve"><value>Use Random Position Change Intervals</value></data>
+  <data name="StartWithWindows" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="AvailablePositions" xml:space="preserve"><value>Available Positions</value></data>
+  <data name="AvailablePositionsDesc" xml:space="preserve"><value>Select which desk positions are available for your setup:</value></data>
+  <data name="StandingPosition" xml:space="preserve"><value>Standing Position</value></data>
+  <data name="SittingPosition" xml:space="preserve"><value>Sitting Position</value></data>
+  <data name="FloorPosition" xml:space="preserve"><value>Floor Position</value></data>
+  <data name="ManageCuesByPosition" xml:space="preserve"><value>Manage Cues by Position</value></data>
+  <data name="SelectPositionDesc" xml:space="preserve"><value>Select position to view and manage its specific cues:</value></data>
+  <data name="Standing" xml:space="preserve"><value>Standing</value></data>
+  <data name="Sitting" xml:space="preserve"><value>Sitting</value></data>
+  <data name="Floor" xml:space="preserve"><value>Floor</value></data>
+  <data name="PositionChanges" xml:space="preserve"><value>Position Changes</value></data>
+  <data name="Cues" xml:space="preserve"><value>Cues</value></data>
+  <data name="AddNewCue" xml:space="preserve"><value>+ Add New Cue</value></data>
+  <data name="RemoveSelected" xml:space="preserve"><value>Remove Selected</value></data>
+  <data name="ViewStatistics" xml:space="preserve"><value>View Statistics</value></data>
+  <data name="SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Showing" xml:space="preserve"><value>Showing</value></data>
+  
+  <data name="StatisticsTitle" xml:space="preserve"><value>Statistics</value></data>
+  <data name="StatisticsSubtitle" xml:space="preserve"><value>View your ergonomic activity history</value></data>
+  <data name="TimePeriod" xml:space="preserve"><value>Time Period</value></data>
+  <data name="Today" xml:space="preserve"><value>Today</value></data>
+  <data name="ThisWeek" xml:space="preserve"><value>This Week</value></data>
+  <data name="ThisMonth" xml:space="preserve"><value>This Month</value></data>
+  <data name="ThisYear" xml:space="preserve"><value>This Year</value></data>
+  <data name="AllTime" xml:space="preserve"><value>All Time</value></data>
+  <data name="TotalCues" xml:space="preserve"><value>Total Cues</value></data>
+  <data name="Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="Dismissed" xml:space="preserve"><value>Dismissed</value></data>
+  <data name="History" xml:space="preserve"><value>History</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  
+  <data name="Complete" xml:space="preserve"><value>✓ Complete</value></data>
+  <data name="Dismiss" xml:space="preserve"><value>✕ Dismiss</value></data>
+  
+  <data name="Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Title" xml:space="preserve"><value>Title</value></data>
+  <data name="Description" xml:space="preserve"><value>Description</value></data>
+  <data name="DateTime" xml:space="preserve"><value>Date/Time</value></data>
+  <data name="Status" xml:space="preserve"><value>Status</value></data>
+  <data name="ResponseTime" xml:space="preserve"><value>Response Time</value></data>
+</root>
