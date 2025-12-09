@@ -141,6 +141,18 @@ public class CueScheduler
     {
         var enabledCues = _settings.Cues.Where(c => c.IsEnabled && PositionChangeCueTypes.Contains(c.Type)).ToList();
         
+        // Filter based on position availability
+        enabledCues = enabledCues.Where(c =>
+        {
+            return c.Type switch
+            {
+                CueType.DeskStanding => _settings.StandingPositionAvailable,
+                CueType.DeskSitting => _settings.SittingPositionAvailable,
+                CueType.DeskFloor => _settings.FloorPositionAvailable,
+                _ => true
+            };
+        }).ToList();
+        
         if (enabledCues.Count == 0)
             return;
 
@@ -154,6 +166,16 @@ public class CueScheduler
         if (enabledCues.Count == 0)
         {
             enabledCues = _settings.Cues.Where(c => c.IsEnabled && PositionChangeCueTypes.Contains(c.Type)).ToList();
+            enabledCues = enabledCues.Where(c =>
+            {
+                return c.Type switch
+                {
+                    CueType.DeskStanding => _settings.StandingPositionAvailable,
+                    CueType.DeskSitting => _settings.SittingPositionAvailable,
+                    CueType.DeskFloor => _settings.FloorPositionAvailable,
+                    _ => true
+                };
+            }).ToList();
         }
 
         if (enabledCues.Count > 0)
@@ -166,16 +188,16 @@ public class CueScheduler
 
     private Cue SelectExerciseForCurrentPosition(List<Cue> exerciseCues)
     {
-        // Filter exercises based on current desk position
+        // Filter exercises based on current desk position and availability
         var appropriateCues = _settings.CurrentPosition switch
         {
-            DeskPosition.Standing => exerciseCues.Where(c => 
+            DeskPosition.Standing when _settings.StandingPositionAvailable => exerciseCues.Where(c => 
                 c.Type == CueType.StandingStretch || 
                 c.Type == CueType.StandingMobilityDrill).ToList(),
-            DeskPosition.Sitting => exerciseCues.Where(c => 
+            DeskPosition.Sitting when _settings.SittingPositionAvailable => exerciseCues.Where(c => 
                 c.Type == CueType.SittingStretch || 
                 c.Type == CueType.SittingMobilityDrill).ToList(),
-            DeskPosition.Floor => exerciseCues.Where(c => 
+            DeskPosition.Floor when _settings.FloorPositionAvailable => exerciseCues.Where(c => 
                 c.Type == CueType.FloorStretch || 
                 c.Type == CueType.FloorMobilityDrill).ToList(),
             _ => exerciseCues

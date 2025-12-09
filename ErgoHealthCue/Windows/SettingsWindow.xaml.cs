@@ -34,6 +34,11 @@ public partial class SettingsWindow : Window
         MinPositionIntervalTextBox.Text = _settings.MinPositionIntervalMinutes.ToString();
         MaxPositionIntervalTextBox.Text = _settings.MaxPositionIntervalMinutes.ToString();
         
+        // Load position availability
+        StandingAvailableCheckBox.IsChecked = _settings.StandingPositionAvailable;
+        SittingAvailableCheckBox.IsChecked = _settings.SittingPositionAvailable;
+        FloorAvailableCheckBox.IsChecked = _settings.FloorPositionAvailable;
+        
         StartupCheckBox.IsChecked = _startupService.IsStartupEnabled();
         
         // Set current position
@@ -196,6 +201,11 @@ public partial class SettingsWindow : Window
         _settings.UseRandomPositionIntervals = RandomPositionIntervalsCheckBox.IsChecked ?? true;
         _settings.MinPositionIntervalMinutes = minPositionInterval;
         _settings.MaxPositionIntervalMinutes = maxPositionInterval;
+        
+        // Update position availability
+        _settings.StandingPositionAvailable = StandingAvailableCheckBox.IsChecked ?? true;
+        _settings.SittingPositionAvailable = SittingAvailableCheckBox.IsChecked ?? true;
+        _settings.FloorPositionAvailable = FloorAvailableCheckBox.IsChecked ?? true;
         
         _settings.Cues = _allCues.ToList();
         

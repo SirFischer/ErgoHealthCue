@@ -12,6 +12,11 @@ public class AppSettings
     public int MaxPositionIntervalMinutes { get; set; } = 120;
     public bool UseRandomPositionIntervals { get; set; } = true;
     
+    // Position availability
+    public bool StandingPositionAvailable { get; set; } = true;
+    public bool SittingPositionAvailable { get; set; } = true;
+    public bool FloorPositionAvailable { get; set; } = true;
+    
     public bool StartOnWindowsStartup { get; set; } = false;
     public DeskPosition CurrentPosition { get; set; } = DeskPosition.Sitting;
     public List<Cue> Cues { get; set; } = new();

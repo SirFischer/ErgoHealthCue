@@ -31,25 +31,35 @@ public class StatusConverter : IValueConverter
 public partial class StatisticsWindow : Window
 {
     private readonly DataService _dataService;
+    private List<CueStatistic> _allStatistics;
 
     public StatisticsWindow(DataService dataService)
     {
         InitializeComponent();
         _dataService = dataService;
+        _allStatistics = _dataService.LoadStatistics();
+        LoadStatistics();
+    }
+
+    private void TimePeriodRadio_Checked(object sender, RoutedEventArgs e)
+    {
         LoadStatistics();
     }
 
     private void LoadStatistics()
     {
-        var statistics = _dataService.LoadStatistics();
+        if (_allStatistics == null) return;
+        
+        // Filter by selected time period
+        var filteredStatistics = FilterByTimePeriod(_allStatistics);
         
         // Update summary
-        TotalCuesText.Text = statistics.Count.ToString();
-        CompletedText.Text = statistics.Count(s => s.WasCompleted).ToString();
-        DismissedText.Text = statistics.Count(s => !s.WasCompleted).ToString();
+        TotalCuesText.Text = filteredStatistics.Count.ToString();
+        CompletedText.Text = filteredStatistics.Count(s => s.WasCompleted).ToString();
+        DismissedText.Text = filteredStatistics.Count(s => !s.WasCompleted).ToString();
         
         // Prepare data for grid
-        var viewModels = statistics
+        var viewModels = filteredStatistics
             .OrderByDescending(s => s.ShownAt)
             .Select(s => new StatisticsViewModel
             {
@@ -62,6 +72,36 @@ public partial class StatisticsWindow : Window
             .ToList();
         
         StatisticsDataGrid.ItemsSource = viewModels;
+    }
+
+    private List<CueStatistic> FilterByTimePeriod(List<CueStatistic> statistics)
+    {
+        var now = DateTime.Now;
+        
+        if (TodayRadio?.IsChecked == true)
+        {
+            var startOfDay = now.Date;
+            return statistics.Where(s => s.ShownAt >= startOfDay).ToList();
+        }
+        else if (WeekRadio?.IsChecked == true)
+        {
+            var startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+            return statistics.Where(s => s.ShownAt >= startOfWeek).ToList();
+        }
+        else if (MonthRadio?.IsChecked == true)
+        {
+            var startOfMonth = new DateTime(now.Year, now.Month, 1);
+            return statistics.Where(s => s.ShownAt >= startOfMonth).ToList();
+        }
+        else if (YearRadio?.IsChecked == true)
+        {
+            var startOfYear = new DateTime(now.Year, 1, 1);
+            return statistics.Where(s => s.ShownAt >= startOfYear).ToList();
+        }
+        else // All Time
+        {
+            return statistics;
+        }
     }
 
     private string GetResponseTime(CueStatistic stat)

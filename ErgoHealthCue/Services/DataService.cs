@@ -63,6 +63,9 @@ public class DataService
             MinPositionIntervalMinutes = 60,
             MaxPositionIntervalMinutes = 120,
             UseRandomPositionIntervals = true,
+            StandingPositionAvailable = true,
+            SittingPositionAvailable = true,
+            FloorPositionAvailable = true,
             StartOnWindowsStartup = false,
             CurrentPosition = DeskPosition.Sitting,
             Cues = new List<Cue>
