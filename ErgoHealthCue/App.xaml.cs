@@ -53,6 +53,8 @@ public partial class App : Application
         };
 
         var contextMenu = new ContextMenuStrip();
+        contextMenu.Items.Add("Trigger Cue Now", null, (s, e) => TriggerCueNow());
+        contextMenu.Items.Add("-");
         contextMenu.Items.Add("Settings", null, (s, e) => OpenSettings());
         contextMenu.Items.Add("Statistics", null, (s, e) => OpenStatistics());
         contextMenu.Items.Add("-");
@@ -94,8 +96,16 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var overlayWindow = new CueOverlayWindow(cue, _dataService!);
+            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!);
             overlayWindow.Show();
+        });
+    }
+
+    private void TriggerCueNow()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            _scheduler?.TriggerNow();
         });
     }
 

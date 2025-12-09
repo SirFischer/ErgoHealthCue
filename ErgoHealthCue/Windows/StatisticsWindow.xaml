@@ -6,6 +6,10 @@
         Height="500" Width="800"
         WindowStartupLocation="CenterOwner">
     
+    <Window.Resources>
+        <local:StatusConverter x:Key="StatusConverter"/>
+    </Window.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -80,8 +84,4 @@
                HorizontalAlignment="Right"
                Click="CloseButton_Click"/>
     </Grid>
-    
-    <Window.Resources>
-        <local:StatusConverter x:Key="StatusConverter"/>
-    </Window.Resources>
 </Window>

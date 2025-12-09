@@ -29,6 +29,20 @@ public partial class SettingsWindow : Window
         MaxIntervalTextBox.Text = _settings.MaxIntervalMinutes.ToString();
         StartupCheckBox.IsChecked = _startupService.IsStartupEnabled();
         
+        // Set current position
+        switch (_settings.CurrentPosition)
+        {
+            case DeskPosition.Standing:
+                StandingRadio.IsChecked = true;
+                break;
+            case DeskPosition.Sitting:
+                SittingRadio.IsChecked = true;
+                break;
+            case DeskPosition.Floor:
+                FloorRadio.IsChecked = true;
+                break;
+        }
+        
         // Setup cues data grid
         _cues = new ObservableCollection<Cue>(_settings.Cues);
         CuesDataGrid.ItemsSource = _cues;
@@ -90,6 +104,14 @@ public partial class SettingsWindow : Window
         _settings.MinIntervalMinutes = minInterval;
         _settings.MaxIntervalMinutes = maxInterval;
         _settings.Cues = _cues.ToList();
+        
+        // Update current position
+        if (StandingRadio.IsChecked == true)
+            _settings.CurrentPosition = DeskPosition.Standing;
+        else if (SittingRadio.IsChecked == true)
+            _settings.CurrentPosition = DeskPosition.Sitting;
+        else if (FloorRadio.IsChecked == true)
+            _settings.CurrentPosition = DeskPosition.Floor;
         
         // Handle startup setting
         bool startupEnabled = StartupCheckBox.IsChecked ?? false;
