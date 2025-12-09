@@ -71,7 +71,8 @@
         </Style>
     </Window.Resources>
     
-    <Grid Margin="30">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -441,4 +442,5 @@
             </Button>
         </StackPanel>
     </Grid>
+    </ScrollViewer>
 </Window>
