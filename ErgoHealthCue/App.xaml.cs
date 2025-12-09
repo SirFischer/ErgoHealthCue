@@ -96,7 +96,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!);
+            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!, _settings!);
             overlayWindow.Show();
         });
     }
