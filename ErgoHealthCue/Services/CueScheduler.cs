@@ -9,6 +9,13 @@ public class CueScheduler
     private readonly Random _random = new();
     private AppSettings _settings;
     private readonly DataService _dataService;
+    
+    private static readonly CueType[] PositionChangeCueTypes = new[]
+    {
+        CueType.DeskStanding,
+        CueType.DeskSitting,
+        CueType.DeskFloor
+    };
 
     public event EventHandler<Cue>? CueTriggered;
 
@@ -79,16 +86,9 @@ public class CueScheduler
         if (enabledCues.Count == 0)
             return;
 
-        // Separate position changes from exercises
-        var positionCues = enabledCues.Where(c => 
-            c.Type == CueType.DeskStanding || 
-            c.Type == CueType.DeskSitting || 
-            c.Type == CueType.DeskFloor).ToList();
-
-        var exerciseCues = enabledCues.Where(c => 
-            c.Type != CueType.DeskStanding && 
-            c.Type != CueType.DeskSitting && 
-            c.Type != CueType.DeskFloor).ToList();
+        // Separate position changes from exercises using constant array
+        var positionCues = enabledCues.Where(c => PositionChangeCueTypes.Contains(c.Type)).ToList();
+        var exerciseCues = enabledCues.Where(c => !PositionChangeCueTypes.Contains(c.Type)).ToList();
 
         // 30% chance for position change, 70% for exercise
         Cue? selectedCue = null;
