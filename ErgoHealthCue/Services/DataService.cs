@@ -9,6 +9,7 @@ public class DataService
     private readonly string _settingsPath;
     private readonly string _statisticsPath;
     private readonly string _appDataFolder;
+    private readonly object _statisticsLock = new();
 
     public DataService()
     {
@@ -102,8 +103,11 @@ public class DataService
 
     public void AddStatistic(CueStatistic statistic)
     {
-        var statistics = LoadStatistics();
-        statistics.Add(statistic);
-        SaveStatistics(statistics);
+        lock (_statisticsLock)
+        {
+            var statistics = LoadStatistics();
+            statistics.Add(statistic);
+            SaveStatistics(statistics);
+        }
     }
 }

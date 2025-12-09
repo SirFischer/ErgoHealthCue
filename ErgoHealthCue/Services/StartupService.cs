@@ -31,8 +31,12 @@ public class StartupService
             
             if (enable)
             {
-                var exePath = Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
-                key?.SetValue(AppName, $"\"{exePath}\"");
+                // Use Process.GetCurrentProcess().MainModule.FileName for more reliable path
+                var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+                if (!string.IsNullOrEmpty(exePath))
+                {
+                    key?.SetValue(AppName, $"\"{exePath}\"");
+                }
             }
             else
             {

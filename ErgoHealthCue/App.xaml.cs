@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 using ErgoHealthCue.Models;
@@ -14,6 +13,9 @@ namespace ErgoHealthCue;
 /// </summary>
 public partial class App : Application
 {
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool DestroyIcon(IntPtr hIcon);
+
     private NotifyIcon? _notifyIcon;
     private DataService? _dataService;
     private CueScheduler? _scheduler;
@@ -63,21 +65,29 @@ public partial class App : Application
     private System.IO.Stream GetIconStream()
     {
         // Create a simple icon programmatically
-        var bitmap = new System.Drawing.Bitmap(32, 32);
+        using var bitmap = new System.Drawing.Bitmap(32, 32);
         using (var g = System.Drawing.Graphics.FromImage(bitmap))
         {
             g.Clear(System.Drawing.Color.Transparent);
             g.FillEllipse(System.Drawing.Brushes.Blue, 4, 4, 24, 24);
-            g.DrawString("E", new System.Drawing.Font("Arial", 14, System.Drawing.FontStyle.Bold), 
-                System.Drawing.Brushes.White, 8, 6);
+            using var font = new System.Drawing.Font("Arial", 14, System.Drawing.FontStyle.Bold);
+            g.DrawString("E", font, System.Drawing.Brushes.White, 8, 6);
         }
         
         var iconHandle = bitmap.GetHicon();
-        var icon = System.Drawing.Icon.FromHandle(iconHandle);
-        var stream = new System.IO.MemoryStream();
-        icon.Save(stream);
-        stream.Seek(0, System.IO.SeekOrigin.Begin);
-        return stream;
+        try
+        {
+            using var icon = System.Drawing.Icon.FromHandle(iconHandle);
+            var stream = new System.IO.MemoryStream();
+            icon.Save(stream);
+            stream.Seek(0, System.IO.SeekOrigin.Begin);
+            return stream;
+        }
+        finally
+        {
+            // Clean up the GDI handle to prevent leaks
+            DestroyIcon(iconHandle);
+        }
     }
 
     private void Scheduler_CueTriggered(object? sender, Cue cue)
