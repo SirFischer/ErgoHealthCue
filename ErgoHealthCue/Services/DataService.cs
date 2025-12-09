@@ -57,9 +57,12 @@ public class DataService
     {
         return new AppSettings
         {
-            MinIntervalMinutes = 30,
-            MaxIntervalMinutes = 60,
-            UseRandomIntervals = true,
+            MinExerciseIntervalMinutes = 30,
+            MaxExerciseIntervalMinutes = 45,
+            UseRandomExerciseIntervals = true,
+            MinPositionIntervalMinutes = 60,
+            MaxPositionIntervalMinutes = 120,
+            UseRandomPositionIntervals = true,
             StartOnWindowsStartup = false,
             CurrentPosition = DeskPosition.Sitting,
             Cues = new List<Cue>

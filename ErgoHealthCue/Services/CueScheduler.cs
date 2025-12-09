@@ -5,11 +5,13 @@ namespace ErgoHealthCue.Services;
 
 public class CueScheduler
 {
-    private readonly DispatcherTimer _timer;
+    private readonly DispatcherTimer _exerciseTimer;
+    private readonly DispatcherTimer _positionTimer;
     private readonly Random _random = new();
     private AppSettings _settings;
     private readonly DataService _dataService;
-    private Guid? _lastCueId;
+    private Guid? _lastExerciseCueId;
+    private Guid? _lastPositionCueId;
     
     private static readonly CueType[] PositionChangeCueTypes = new[]
     {
@@ -24,25 +26,32 @@ public class CueScheduler
     {
         _settings = settings;
         _dataService = dataService;
-        _timer = new DispatcherTimer();
-        _timer.Tick += Timer_Tick;
+        
+        _exerciseTimer = new DispatcherTimer();
+        _exerciseTimer.Tick += ExerciseTimer_Tick;
+        
+        _positionTimer = new DispatcherTimer();
+        _positionTimer.Tick += PositionTimer_Tick;
     }
 
     public void Start()
     {
-        ScheduleNextCue();
-        _timer.Start();
+        ScheduleNextExerciseCue();
+        ScheduleNextPositionCue();
+        _exerciseTimer.Start();
+        _positionTimer.Start();
     }
 
     public void Stop()
     {
-        _timer.Stop();
+        _exerciseTimer.Stop();
+        _positionTimer.Stop();
     }
 
     public void UpdateSettings(AppSettings settings)
     {
         _settings = settings;
-        if (_timer.IsEnabled)
+        if (_exerciseTimer.IsEnabled || _positionTimer.IsEnabled)
         {
             Stop();
             Start();
@@ -51,86 +60,106 @@ public class CueScheduler
 
     public void TriggerNow()
     {
-        // Stop the timer, trigger a cue, then reschedule
-        _timer.Stop();
-        SelectAndTriggerCue();
-        ScheduleNextCue();
-        _timer.Start();
+        // Trigger an exercise cue immediately
+        TriggerExerciseCue();
     }
 
-    private void ScheduleNextCue()
+    private void ScheduleNextExerciseCue()
     {
         int intervalMinutes;
         
-        if (_settings.UseRandomIntervals)
+        if (_settings.UseRandomExerciseIntervals)
         {
-            intervalMinutes = _random.Next(_settings.MinIntervalMinutes, _settings.MaxIntervalMinutes + 1);
+            intervalMinutes = _random.Next(_settings.MinExerciseIntervalMinutes, _settings.MaxExerciseIntervalMinutes + 1);
         }
         else
         {
-            intervalMinutes = _settings.MinIntervalMinutes;
+            intervalMinutes = _settings.MinExerciseIntervalMinutes;
         }
 
-        _timer.Interval = TimeSpan.FromMinutes(intervalMinutes);
+        _exerciseTimer.Interval = TimeSpan.FromMinutes(intervalMinutes);
     }
 
-    private void Timer_Tick(object? sender, EventArgs e)
+    private void ScheduleNextPositionCue()
     {
-        SelectAndTriggerCue();
-        ScheduleNextCue();
+        int intervalMinutes;
+        
+        if (_settings.UseRandomPositionIntervals)
+        {
+            intervalMinutes = _random.Next(_settings.MinPositionIntervalMinutes, _settings.MaxPositionIntervalMinutes + 1);
+        }
+        else
+        {
+            intervalMinutes = _settings.MinPositionIntervalMinutes;
+        }
+
+        _positionTimer.Interval = TimeSpan.FromMinutes(intervalMinutes);
     }
 
-    private void SelectAndTriggerCue()
+    private void ExerciseTimer_Tick(object? sender, EventArgs e)
     {
-        var enabledCues = _settings.Cues.Where(c => c.IsEnabled).ToList();
+        TriggerExerciseCue();
+        ScheduleNextExerciseCue();
+    }
+
+    private void PositionTimer_Tick(object? sender, EventArgs e)
+    {
+        TriggerPositionCue();
+        ScheduleNextPositionCue();
+    }
+
+    private void TriggerExerciseCue()
+    {
+        var enabledCues = _settings.Cues.Where(c => c.IsEnabled && !PositionChangeCueTypes.Contains(c.Type)).ToList();
         
         if (enabledCues.Count == 0)
             return;
 
-        // Exclude the last cue to prevent repetition
-        if (_lastCueId.HasValue)
+        // Exclude the last exercise cue to prevent repetition
+        if (_lastExerciseCueId.HasValue)
         {
-            enabledCues = enabledCues.Where(c => c.Id != _lastCueId.Value).ToList();
+            enabledCues = enabledCues.Where(c => c.Id != _lastExerciseCueId.Value).ToList();
         }
         
         // If we only have one cue and it was just shown, we have to show it again
         if (enabledCues.Count == 0)
         {
-            enabledCues = _settings.Cues.Where(c => c.IsEnabled).ToList();
+            enabledCues = _settings.Cues.Where(c => c.IsEnabled && !PositionChangeCueTypes.Contains(c.Type)).ToList();
         }
 
-        // Separate position changes from exercises using constant array
-        var positionCues = enabledCues.Where(c => PositionChangeCueTypes.Contains(c.Type)).ToList();
-        var exerciseCues = enabledCues.Where(c => !PositionChangeCueTypes.Contains(c.Type)).ToList();
-
-        // 30% chance for position change, 70% for exercise
-        Cue? selectedCue = null;
-        
-        if (positionCues.Count > 0 && exerciseCues.Count > 0)
-        {
-            if (_random.Next(100) < 30)
-            {
-                // Position change
-                selectedCue = positionCues[_random.Next(positionCues.Count)];
-            }
-            else
-            {
-                // Exercise appropriate for current position
-                selectedCue = SelectExerciseForCurrentPosition(exerciseCues);
-            }
-        }
-        else if (positionCues.Count > 0)
-        {
-            selectedCue = positionCues[_random.Next(positionCues.Count)];
-        }
-        else if (exerciseCues.Count > 0)
-        {
-            selectedCue = SelectExerciseForCurrentPosition(exerciseCues);
-        }
+        // Select exercise appropriate for current position
+        var selectedCue = SelectExerciseForCurrentPosition(enabledCues);
 
         if (selectedCue != null)
         {
-            _lastCueId = selectedCue.Id;
+            _lastExerciseCueId = selectedCue.Id;
+            CueTriggered?.Invoke(this, selectedCue);
+        }
+    }
+
+    private void TriggerPositionCue()
+    {
+        var enabledCues = _settings.Cues.Where(c => c.IsEnabled && PositionChangeCueTypes.Contains(c.Type)).ToList();
+        
+        if (enabledCues.Count == 0)
+            return;
+
+        // Exclude the last position cue to prevent repetition
+        if (_lastPositionCueId.HasValue)
+        {
+            enabledCues = enabledCues.Where(c => c.Id != _lastPositionCueId.Value).ToList();
+        }
+        
+        // If we only have one cue and it was just shown, we have to show it again
+        if (enabledCues.Count == 0)
+        {
+            enabledCues = _settings.Cues.Where(c => c.IsEnabled && PositionChangeCueTypes.Contains(c.Type)).ToList();
+        }
+
+        if (enabledCues.Count > 0)
+        {
+            var selectedCue = enabledCues[_random.Next(enabledCues.Count)];
+            _lastPositionCueId = selectedCue.Id;
             CueTriggered?.Invoke(this, selectedCue);
         }
     }

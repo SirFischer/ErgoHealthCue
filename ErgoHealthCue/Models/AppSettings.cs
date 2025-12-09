@@ -2,9 +2,16 @@ namespace ErgoHealthCue.Models;
 
 public class AppSettings
 {
-    public int MinIntervalMinutes { get; set; } = 30;
-    public int MaxIntervalMinutes { get; set; } = 60;
-    public bool UseRandomIntervals { get; set; } = true;
+    // Exercise intervals
+    public int MinExerciseIntervalMinutes { get; set; } = 30;
+    public int MaxExerciseIntervalMinutes { get; set; } = 45;
+    public bool UseRandomExerciseIntervals { get; set; } = true;
+    
+    // Position change intervals
+    public int MinPositionIntervalMinutes { get; set; } = 60;
+    public int MaxPositionIntervalMinutes { get; set; } = 120;
+    public bool UseRandomPositionIntervals { get; set; } = true;
+    
     public bool StartOnWindowsStartup { get; set; } = false;
     public DeskPosition CurrentPosition { get; set; } = DeskPosition.Sitting;
     public List<Cue> Cues { get; set; } = new();

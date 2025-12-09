@@ -8,13 +8,21 @@ public partial class AddCueWindow : Window
 {
     public Cue NewCue { get; private set; } = new();
 
-    public AddCueWindow()
+    public AddCueWindow(CueType? defaultType = null)
     {
         InitializeComponent();
         
         // Populate type combo box
         TypeComboBox.ItemsSource = Enum.GetValues(typeof(CueType));
-        TypeComboBox.SelectedIndex = 0;
+        
+        if (defaultType.HasValue)
+        {
+            TypeComboBox.SelectedItem = defaultType.Value;
+        }
+        else
+        {
+            TypeComboBox.SelectedIndex = 0;
+        }
     }
 
     private void OkButton_Click(object sender, RoutedEventArgs e)

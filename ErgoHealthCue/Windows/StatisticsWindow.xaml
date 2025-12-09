@@ -3,85 +3,213 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ErgoHealthCue.Windows"
         Title="Statistics" 
-        Height="500" Width="800"
-        WindowStartupLocation="CenterOwner">
+        Height="600" Width="900"
+        WindowStartupLocation="CenterOwner"
+        Background="#F9FAFB">
     
     <Window.Resources>
         <local:StatusConverter x:Key="StatusConverter"/>
+        
+        <Style x:Key="ModernGroupBox" TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="GroupBox">
+                        <Border Background="{TemplateBinding Background}"
+                               BorderBrush="{TemplateBinding BorderBrush}"
+                               BorderThickness="{TemplateBinding BorderThickness}"
+                               CornerRadius="12"
+                               Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="Black"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="{TemplateBinding Header}"
+                                         FontSize="18"
+                                         FontWeight="SemiBold"
+                                         Foreground="#1F2937"
+                                         Margin="0,0,0,15"/>
+                                <ContentPresenter/>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="StatCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
     </Window.Resources>
     
-    <Grid Margin="20">
+    <Grid Margin="30">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <!-- Summary -->
-        <GroupBox Grid.Row="0" Header="Summary" Padding="10" Margin="0,0,0,10">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="Total Cues" FontWeight="Bold" HorizontalAlignment="Center"/>
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,30">
+            <TextBlock Text="Statistics" FontSize="32" FontWeight="Bold" Foreground="#111827"/>
+            <TextBlock Text="View your ergonomic activity history" 
+                      FontSize="14" Foreground="#6B7280" Margin="0,5,0,0"/>
+        </StackPanel>
+        
+        <!-- Summary Cards -->
+        <Grid Grid.Row="1" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Border Grid.Column="0" Style="{StaticResource StatCard}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="Black"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="Total Cues" 
+                              FontSize="14" 
+                              FontWeight="Medium"
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"/>
                     <TextBlock x:Name="TotalCuesText" 
                               Text="0" 
-                              FontSize="24" 
+                              FontSize="36" 
+                              FontWeight="Bold"
+                              Foreground="#111827"
                               HorizontalAlignment="Center" 
-                              Margin="0,5,0,0"/>
+                              Margin="0,8,0,0"/>
                 </StackPanel>
-                
-                <StackPanel Grid.Column="1">
-                    <TextBlock Text="Completed" FontWeight="Bold" HorizontalAlignment="Center"/>
+            </Border>
+            
+            <Border Grid.Column="2" Style="{StaticResource StatCard}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#10B981"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="Completed" 
+                              FontSize="14" 
+                              FontWeight="Medium"
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"/>
                     <TextBlock x:Name="CompletedText" 
                               Text="0" 
-                              FontSize="24" 
-                              Foreground="Green"
+                              FontSize="36" 
+                              FontWeight="Bold"
+                              Foreground="#10B981"
                               HorizontalAlignment="Center" 
-                              Margin="0,5,0,0"/>
+                              Margin="0,8,0,0"/>
                 </StackPanel>
-                
-                <StackPanel Grid.Column="2">
-                    <TextBlock Text="Dismissed" FontWeight="Bold" HorizontalAlignment="Center"/>
+            </Border>
+            
+            <Border Grid.Column="4" Style="{StaticResource StatCard}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#EF4444"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="Dismissed" 
+                              FontSize="14" 
+                              FontWeight="Medium"
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"/>
                     <TextBlock x:Name="DismissedText" 
                               Text="0" 
-                              FontSize="24" 
-                              Foreground="Red"
+                              FontSize="36" 
+                              FontWeight="Bold"
+                              Foreground="#EF4444"
                               HorizontalAlignment="Center" 
-                              Margin="0,5,0,0"/>
+                              Margin="0,8,0,0"/>
                 </StackPanel>
-            </Grid>
-        </GroupBox>
+            </Border>
+        </Grid>
         
-        <!-- Detailed List -->
-        <GroupBox Grid.Row="1" Header="History" Padding="10">
+        <!-- History -->
+        <GroupBox Grid.Row="2" Header="History" Style="{StaticResource ModernGroupBox}">
             <DataGrid x:Name="StatisticsDataGrid"
                      AutoGenerateColumns="False"
                      IsReadOnly="True"
                      SelectionMode="Single"
-                     GridLinesVisibility="Horizontal"
-                     HeadersVisibility="Column">
+                     GridLinesVisibility="None"
+                     HeadersVisibility="Column"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     RowBackground="White"
+                     AlternatingRowBackground="#F9FAFB"
+                     FontSize="14">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Date/Time" Binding="{Binding ShownAt, StringFormat='yyyy-MM-dd HH:mm'}" Width="140"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding CueType}" Width="120"/>
-                    <DataGridTextColumn Header="Title" Binding="{Binding CueTitle}" Width="150"/>
-                    <DataGridTextColumn Header="Status" Binding="{Binding WasCompleted, Converter={StaticResource StatusConverter}}" Width="100"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding CueType}" Width="140"/>
+                    <DataGridTextColumn Header="Title" Binding="{Binding CueTitle}" Width="180"/>
+                    <DataGridTextColumn Header="Status" Binding="{Binding WasCompleted, Converter={StaticResource StatusConverter}}" Width="110"/>
                     <DataGridTextColumn Header="Response Time" Binding="{Binding ResponseTime}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
         
         <!-- Close Button -->
-        <Button Grid.Row="2" 
+        <Button Grid.Row="3" 
                Content="Close"
-               Width="100"
-               Height="35"
-               Margin="0,10,0,0"
+               Width="120"
+               Height="44"
+               FontSize="15"
+               Margin="0,20,0,0"
                HorizontalAlignment="Right"
-               Click="CloseButton_Click"/>
+               Click="CloseButton_Click">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#6366F1" Offset="0"/>
+                                <GradientStop Color="#4F46E5" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" 
+                                       CornerRadius="10"
+                                       Padding="20,10">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="#6366F1"/>
+                                    </Border.Effect>
+                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                    VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#4F46E5" Offset="0"/>
+                                        <GradientStop Color="#4338CA" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Window>
