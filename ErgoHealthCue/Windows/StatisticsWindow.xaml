@@ -267,19 +267,22 @@
             <Button Content="Reset Statistics"
                    Width="140"
                    Height="44"
-                   FontSize="15"
+                   FontSize="14"
                    Margin="0,0,15,0"
                    Click="ResetStatisticsButton_Click">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="#EF4444"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="#F3F4F6"/>
+                        <Setter Property="Foreground" Value="#6B7280"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="BorderBrush" Value="#D1D5DB"/>
                         <Setter Property="Cursor" Value="Hand"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" 
+                                           BorderBrush="{TemplateBinding BorderBrush}"
+                                           BorderThickness="{TemplateBinding BorderThickness}"
                                            CornerRadius="10"
                                            Padding="20,10">
                                         <ContentPresenter HorizontalAlignment="Center" 
@@ -290,7 +293,8 @@
                         </Setter>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#DC2626"/>
+                                <Setter Property="Background" Value="#E5E7EB"/>
+                                <Setter Property="Foreground" Value="#EF4444"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>

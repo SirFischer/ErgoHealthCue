@@ -53,16 +53,16 @@ public partial class App : Application
         {
             Icon = new System.Drawing.Icon(GetIconStream()),
             Visible = true,
-            Text = "ErgoHealthCue"
+            Text = Resources.Strings.AppTitle
         };
 
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add("Trigger Cue Now", null, (s, e) => TriggerCueNow());
+        contextMenu.Items.Add(Resources.Strings.TriggerCueNow, null, (s, e) => TriggerCueNow());
         contextMenu.Items.Add("-");
-        contextMenu.Items.Add("Settings", null, (s, e) => OpenSettings());
-        contextMenu.Items.Add("Progress & Statistics", null, (s, e) => OpenStatistics());
+        contextMenu.Items.Add(Resources.Strings.Settings, null, (s, e) => OpenSettings());
+        contextMenu.Items.Add(Resources.Strings.ProgressStatistics, null, (s, e) => OpenStatistics());
         contextMenu.Items.Add("-");
-        contextMenu.Items.Add("Exit", null, (s, e) => Shutdown());
+        contextMenu.Items.Add(Resources.Strings.Exit, null, (s, e) => Shutdown());
 
         _notifyIcon.ContextMenuStrip = contextMenu;
         _notifyIcon.DoubleClick += (s, e) => OpenSettings();

@@ -176,18 +176,25 @@ public partial class StatisticsWindow : Window
     private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
     {
         var result = System.Windows.MessageBox.Show(
-            "Are you sure you want to permanently delete all statistics?\n\nThis action cannot be undone.",
-            "Reset Statistics",
+            "Are you sure you want to permanently delete all statistics and reset your level?\n\nThis action cannot be undone.",
+            "Reset Statistics & Level",
             System.Windows.MessageBoxButton.YesNo,
             System.Windows.MessageBoxImage.Warning);
             
         if (result == System.Windows.MessageBoxResult.Yes)
         {
+            // Reset statistics
             _allStatistics.Clear();
             _dataService.SaveStatistics(_allStatistics);
+            
+            // Reset level and XP
+            var settings = _dataService.LoadSettings();
+            settings.Progress = new UserProgress(); // Reset to level 1, 0 XP
+            _dataService.SaveSettings(settings);
+            
             LoadStatistics();
             System.Windows.MessageBox.Show(
-                "All statistics have been reset.",
+                "All statistics and level progress have been reset.",
                 "Success",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Information);
