@@ -60,7 +60,7 @@ public partial class App : Application
         contextMenu.Items.Add("Trigger Cue Now", null, (s, e) => TriggerCueNow());
         contextMenu.Items.Add("-");
         contextMenu.Items.Add("Settings", null, (s, e) => OpenSettings());
-        contextMenu.Items.Add("Statistics", null, (s, e) => OpenStatistics());
+        contextMenu.Items.Add("Progress & Statistics", null, (s, e) => OpenStatistics());
         contextMenu.Items.Add("-");
         contextMenu.Items.Add("Exit", null, (s, e) => Shutdown());
 
