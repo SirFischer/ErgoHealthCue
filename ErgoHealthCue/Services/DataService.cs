@@ -85,11 +85,11 @@ public class DataService
             // Position changes
             new() { Type = CueType.DeskStanding, Title = "Stand Up", Description = "Raise your desk to standing position" },
             new() { Type = CueType.DeskSitting, Title = "Sit Down", Description = "Lower your desk to sitting position" },
-                new() { Type = CueType.DeskFloor, Title = "Floor Position", Description = "Lower your desk all the way down" },
-                
-                // Standing position exercises - More dynamic and unrestricted
-                new() { Type = CueType.StandingStretch, Title = "Standing Neck Stretch", Description = "Gently tilt your head to each side, holding for 10 seconds" },
-                new() { Type = CueType.StandingStretch, Title = "Standing Shoulder Rolls", Description = "Roll your shoulders backwards 10 times" },
+            new() { Type = CueType.DeskFloor, Title = "Floor Position", Description = "Lower your desk all the way down" },
+            
+            // Standing position exercises - More dynamic and unrestricted
+            new() { Type = CueType.StandingStretch, Title = "Standing Neck Stretch", Description = "Gently tilt your head to each side, holding for 10 seconds" },
+            new() { Type = CueType.StandingStretch, Title = "Standing Shoulder Rolls", Description = "Roll your shoulders backwards 10 times" },
                 new() { Type = CueType.StandingStretch, Title = "Standing Calf Stretch", Description = "Step forward and gently stretch your calf muscles, hold 15 seconds each leg" },
                 new() { Type = CueType.StandingStretch, Title = "Standing Quad Stretch", Description = "Hold your foot behind you, pulling heel to glutes, hold 15 seconds each leg" },
                 new() { Type = CueType.StandingStretch, Title = "Standing Side Bend", Description = "Reach one arm overhead and bend to the side, hold 10 seconds each side" },
