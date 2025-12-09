@@ -9,6 +9,7 @@ public class CueScheduler
     private readonly Random _random = new();
     private AppSettings _settings;
     private readonly DataService _dataService;
+    private Guid? _lastCueId;
     
     private static readonly CueType[] PositionChangeCueTypes = new[]
     {
@@ -86,6 +87,18 @@ public class CueScheduler
         if (enabledCues.Count == 0)
             return;
 
+        // Exclude the last cue to prevent repetition
+        if (_lastCueId.HasValue)
+        {
+            enabledCues = enabledCues.Where(c => c.Id != _lastCueId.Value).ToList();
+        }
+        
+        // If we only have one cue and it was just shown, we have to show it again
+        if (enabledCues.Count == 0)
+        {
+            enabledCues = _settings.Cues.Where(c => c.IsEnabled).ToList();
+        }
+
         // Separate position changes from exercises using constant array
         var positionCues = enabledCues.Where(c => PositionChangeCueTypes.Contains(c.Type)).ToList();
         var exerciseCues = enabledCues.Where(c => !PositionChangeCueTypes.Contains(c.Type)).ToList();
@@ -117,6 +130,7 @@ public class CueScheduler
 
         if (selectedCue != null)
         {
+            _lastCueId = selectedCue.Id;
             CueTriggered?.Invoke(this, selectedCue);
         }
     }
