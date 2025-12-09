@@ -34,8 +34,9 @@ public partial class CueOverlayWindow : Window
     private int _penaltyXP;
     private bool _wasUserActive = true;
     private int _previousLevel;
+    private bool _isManualTrigger;
 
-    public CueOverlayWindow(Cue cue, DataService dataService, CueScheduler scheduler, AppSettings settings)
+    public CueOverlayWindow(Cue cue, DataService dataService, CueScheduler scheduler, AppSettings settings, bool isManualTrigger = false)
     {
         InitializeComponent();
         _cue = cue;
@@ -44,20 +45,32 @@ public partial class CueOverlayWindow : Window
         _settings = settings;
         _xpCalculator = new XPCalculator();
         _previousLevel = settings.Progress.Level;
+        _isManualTrigger = isManualTrigger;
 
         TitleText.Text = cue.Title;
         DescriptionText.Text = cue.Description;
 
-        // Calculate XP
+        // Calculate XP (but don't award it for manual triggers)
         int avgInterval = IsPositionChangeCue() 
             ? (settings.MinPositionIntervalMinutes + settings.MaxPositionIntervalMinutes) / 2
             : (settings.MinExerciseIntervalMinutes + settings.MaxExerciseIntervalMinutes) / 2;
         
-        _potentialXP = _xpCalculator.CalculateXPGain(cue.Type, avgInterval, true);
-        _penaltyXP = Math.Abs(_xpCalculator.CalculateXPGain(cue.Type, avgInterval, false));
-        
-        XPText.Text = $"+{_potentialXP} XP";
-        PenaltyText.Text = $"(-{_penaltyXP} XP if dismissed/timeout)";
+        if (_isManualTrigger)
+        {
+            // No XP for manual triggers
+            _potentialXP = 0;
+            _penaltyXP = 0;
+            XPText.Text = "Manual Trigger - No XP";
+            PenaltyText.Text = "";
+        }
+        else
+        {
+            _potentialXP = _xpCalculator.CalculateXPGain(cue.Type, avgInterval, true);
+            _penaltyXP = Math.Abs(_xpCalculator.CalculateXPGain(cue.Type, avgInterval, false));
+            
+            XPText.Text = $"+{_potentialXP} XP";
+            PenaltyText.Text = $"(-{_penaltyXP} XP if dismissed/timeout)";
+        }
 
         _statistic = new CueStatistic
         {
@@ -191,15 +204,18 @@ public partial class CueOverlayWindow : Window
         _statistic.WasCompleted = true;
         _dataService.AddStatistic(_statistic);
         
-        // Award XP
-        _settings.Progress.AddXP(_potentialXP);
-        _dataService.SaveSettings(_settings);
+        // Award XP (only if not manually triggered)
+        if (!_isManualTrigger && _potentialXP > 0)
+        {
+            _settings.Progress.AddXP(_potentialXP);
+            _dataService.SaveSettings(_settings);
+        }
         
         // Update desk position if this was a position change cue
         UpdateDeskPosition();
         
-        // Check for level up
-        if (_settings.Progress.Level > _previousLevel)
+        // Check for level up (only if not manually triggered)
+        if (!_isManualTrigger && _settings.Progress.Level > _previousLevel)
         {
             ShowLevelUpNotification();
         }
@@ -216,9 +232,12 @@ public partial class CueOverlayWindow : Window
         _statistic.WasCompleted = false;
         _dataService.AddStatistic(_statistic);
         
-        // Apply XP penalty
-        _settings.Progress.RemoveXP(_penaltyXP);
-        _dataService.SaveSettings(_settings);
+        // Apply XP penalty (only if not manually triggered)
+        if (!_isManualTrigger && _penaltyXP > 0)
+        {
+            _settings.Progress.RemoveXP(_penaltyXP);
+            _dataService.SaveSettings(_settings);
+        }
         
         Close();
     }
@@ -232,15 +251,26 @@ public partial class CueOverlayWindow : Window
         _statistic.WasCompleted = false;
         _dataService.AddStatistic(_statistic);
         
-        // Apply XP penalty for timeout
-        _settings.Progress.RemoveXP(_penaltyXP);
-        _dataService.SaveSettings(_settings);
-        
-        System.Windows.MessageBox.Show(
-            $"Time's up! You lost {_penaltyXP} XP for not completing the exercise.",
-            "Timeout",
-            System.Windows.MessageBoxButton.OK,
-            System.Windows.MessageBoxImage.Warning);
+        // Apply XP penalty for timeout (only if not manually triggered)
+        if (!_isManualTrigger && _penaltyXP > 0)
+        {
+            _settings.Progress.RemoveXP(_penaltyXP);
+            _dataService.SaveSettings(_settings);
+            
+            System.Windows.MessageBox.Show(
+                $"Time's up! You lost {_penaltyXP} XP for not completing the exercise.",
+                "Timeout",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning);
+        }
+        else
+        {
+            System.Windows.MessageBox.Show(
+                "Time's up! Please complete the exercise promptly next time.",
+                "Timeout",
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning);
+        }
         
         Close();
     }

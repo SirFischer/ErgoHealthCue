@@ -28,10 +28,14 @@ public partial class App : Application
         _dataService = new DataService();
         _startupService = new StartupService();
         _settings = _dataService.LoadSettings();
+        
+        // Set language/culture
+        SetApplicationLanguage(_settings.Language);
         _scheduler = new CueScheduler(_settings, _dataService);
         
         // Subscribe to cue events
         _scheduler.CueTriggered += Scheduler_CueTriggered;
+        _scheduler.CueTriggeredManually += Scheduler_CueTriggeredManually;
         
         // Start the scheduler
         _scheduler.Start();
@@ -96,7 +100,16 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!, _settings!);
+            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!, _settings!, false);
+            overlayWindow.Show();
+        });
+    }
+
+    private void Scheduler_CueTriggeredManually(object? sender, (Cue cue, bool isManual) args)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            var overlayWindow = new CueOverlayWindow(args.cue, _dataService!, _scheduler!, _settings!, args.isManual);
             overlayWindow.Show();
         });
     }
@@ -105,7 +118,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            _scheduler?.TriggerNow();
+            _scheduler?.TriggerNow(true);
         });
     }
 
@@ -130,6 +143,22 @@ public partial class App : Application
             var statsWindow = new StatisticsWindow(_dataService!);
             statsWindow.ShowDialog();
         });
+    }
+
+    private void SetApplicationLanguage(string language)
+    {
+        var culture = language switch
+        {
+            "no" => new System.Globalization.CultureInfo("no"),
+            "en" => new System.Globalization.CultureInfo("en"),
+            "fr" => new System.Globalization.CultureInfo("fr"),
+            "auto" or _ => System.Globalization.CultureInfo.CurrentUICulture
+        };
+        
+        System.Globalization.CultureInfo.CurrentUICulture = culture;
+        System.Globalization.CultureInfo.CurrentCulture = culture;
+        System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+        System.Threading.Thread.CurrentThread.CurrentCulture = culture;
     }
 
     private void Application_Exit(object sender, ExitEventArgs e)

@@ -24,7 +24,7 @@ public partial class LevelUpWindow : Window
         };
         autoCloseTimer.Start();
         
-        // Animate the window
+        // Animate the content border (not the window itself)
         var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(500));
         var scaleIn = new DoubleAnimation(0.8, 1, TimeSpan.FromMilliseconds(500))
         {
@@ -32,8 +32,8 @@ public partial class LevelUpWindow : Window
         };
         
         var transform = new System.Windows.Media.ScaleTransform(0.8, 0.8);
-        this.RenderTransform = transform;
-        this.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+        ContentBorder.RenderTransform = transform;
+        ContentBorder.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
         
         this.BeginAnimation(OpacityProperty, fadeIn);
         transform.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleXProperty, scaleIn);

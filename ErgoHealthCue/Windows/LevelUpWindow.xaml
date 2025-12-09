@@ -11,7 +11,8 @@
         ShowInTaskbar="False"
         ResizeMode="NoResize">
     
-    <Border BorderBrush="#F59E0B" 
+    <Border x:Name="ContentBorder"
+            BorderBrush="#F59E0B" 
             BorderThickness="4" 
             CornerRadius="20"
             Background="White"

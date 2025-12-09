@@ -122,13 +122,60 @@
         <Grid Grid.Row="2" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
             <Border Grid.Column="0" Style="{StaticResource StatCard}">
+                <StackPanel>
+                    <TextBlock Text="Level" 
+                              FontSize="14" 
+                              FontWeight="Medium"
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="LevelText" 
+                              Text="1" 
+                              FontSize="36" 
+                              FontWeight="Bold"
+                              Foreground="#F59E0B"
+                              HorizontalAlignment="Center" 
+                              Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="2" Style="{StaticResource StatCard}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#8B5CF6"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="Progress" 
+                              FontSize="14" 
+                              FontWeight="Medium"
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="ProgressText" 
+                              Text="0%" 
+                              FontSize="36" 
+                              FontWeight="Bold"
+                              Foreground="#8B5CF6"
+                              HorizontalAlignment="Center" 
+                              Margin="0,8,0,0"/>
+                    <TextBlock x:Name="XPText" 
+                              Text="0 / 100 XP" 
+                              FontSize="12" 
+                              Foreground="#9CA3AF"
+                              HorizontalAlignment="Center" 
+                              Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Grid.Column="4" Style="{StaticResource StatCard}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="Black"/>
                 </Border.Effect>
@@ -148,7 +195,7 @@
                 </StackPanel>
             </Border>
             
-            <Border Grid.Column="2" Style="{StaticResource StatCard}">
+            <Border Grid.Column="6" Style="{StaticResource StatCard}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#10B981"/>
                 </Border.Effect>
@@ -168,7 +215,7 @@
                 </StackPanel>
             </Border>
             
-            <Border Grid.Column="4" Style="{StaticResource StatCard}">
+            <Border Grid.Column="8" Style="{StaticResource StatCard}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#EF4444"/>
                 </Border.Effect>

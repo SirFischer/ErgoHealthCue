@@ -58,10 +58,10 @@ public class CueScheduler
         }
     }
 
-    public void TriggerNow()
+    public void TriggerNow(bool isManual = false)
     {
         // Trigger an exercise cue immediately
-        TriggerExerciseCue();
+        TriggerExerciseCue(isManual);
     }
 
     private void ScheduleNextExerciseCue()
@@ -98,7 +98,7 @@ public class CueScheduler
 
     private void ExerciseTimer_Tick(object? sender, EventArgs e)
     {
-        TriggerExerciseCue();
+        TriggerExerciseCue(false);
         ScheduleNextExerciseCue();
     }
 
@@ -108,7 +108,7 @@ public class CueScheduler
         ScheduleNextPositionCue();
     }
 
-    private void TriggerExerciseCue()
+    private void TriggerExerciseCue(bool isManual = false)
     {
         var enabledCues = _settings.Cues.Where(c => c.IsEnabled && !PositionChangeCueTypes.Contains(c.Type)).ToList();
         
@@ -133,9 +133,13 @@ public class CueScheduler
         if (selectedCue != null)
         {
             _lastExerciseCueId = selectedCue.Id;
-            CueTriggered?.Invoke(this, selectedCue);
+            // Pass isManual flag through event args or create a new event signature
+            // For now, we'll use a workaround by adding a property to Cue temporarily
+            CueTriggeredManually?.Invoke(this, (selectedCue, isManual));
         }
     }
+
+    public event EventHandler<(Cue cue, bool isManual)>? CueTriggeredManually;
 
     private void TriggerPositionCue()
     {

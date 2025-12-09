@@ -50,6 +50,15 @@ public partial class StatisticsWindow : Window
     {
         if (_allStatistics == null || TotalCuesText == null) return;
         
+        // Load user progress
+        var settings = _dataService.LoadSettings();
+        
+        // Update level and progress with color
+        LevelText.Text = settings.Progress.Level.ToString();
+        LevelText.Foreground = new System.Windows.Media.SolidColorBrush(GetLevelColor(settings.Progress.Level));
+        ProgressText.Text = $"{settings.Progress.GetProgressPercentage()}%";
+        XPText.Text = $"{settings.Progress.CurrentXP} / {settings.Progress.XPForNextLevel()} XP";
+        
         // Filter by selected time period
         var filteredStatistics = FilterByTimePeriod(_allStatistics);
         
@@ -72,6 +81,43 @@ public partial class StatisticsWindow : Window
             .ToList();
         
         StatisticsDataGrid.ItemsSource = viewModels;
+    }
+
+    private System.Windows.Media.Color GetLevelColor(int level)
+    {
+        // Color gradient: Green (1-20) -> Blue (21-40) -> Red (41-60) -> Purple (61-80) -> Gold (81-100)
+        if (level <= 20)
+        {
+            // Green gradient
+            byte intensity = (byte)(100 + (level * 7)); // 100-240
+            return System.Windows.Media.Color.FromRgb(0, intensity, 0);
+        }
+        else if (level <= 40)
+        {
+            // Blue gradient
+            int progress = level - 20;
+            byte intensity = (byte)(100 + (progress * 7)); // 100-240
+            return System.Windows.Media.Color.FromRgb(0, 0, intensity);
+        }
+        else if (level <= 60)
+        {
+            // Red gradient
+            int progress = level - 40;
+            byte intensity = (byte)(150 + (progress * 5)); // 150-250
+            return System.Windows.Media.Color.FromRgb(intensity, 0, 0);
+        }
+        else if (level <= 80)
+        {
+            // Purple gradient
+            int progress = level - 60;
+            byte intensity = (byte)(120 + (progress * 6)); // 120-240
+            return System.Windows.Media.Color.FromRgb(intensity, 0, intensity);
+        }
+        else
+        {
+            // Gold gradient (81-100)
+            return System.Windows.Media.Color.FromRgb(255, 215, 0); // Gold
+        }
     }
 
     private List<CueStatistic> FilterByTimePeriod(List<CueStatistic> statistics)
