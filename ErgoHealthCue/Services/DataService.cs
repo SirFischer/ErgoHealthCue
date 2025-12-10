@@ -102,7 +102,7 @@ public class DataService
             new() { Type = CueType.StandingMobilityDrill, Title = "Shoulder Rolls & Arm Circles", Description = "Roll shoulders backward 10 times, then make arm circles forward and back, 10 each" },
             new() { Type = CueType.StandingMobilityDrill, Title = "Standing March", Description = "March in place, lift knees high, pump arms, increase blood flow, 30 seconds" },
             new() { Type = CueType.StandingMobilityDrill, Title = "Ankle Circles", Description = "Lift one foot off ground, rotate ankle 10 times clockwise, then 10 counterclockwise, each foot" },
-            new() { Type = CueType.StandingMobilityDrill, Title = "Heel Raises", Description = "Rise up onto toes, hold briefly, lower slowly, strengthen calves and ankles, 15 reps" },
+            new() { Type = CueType.StandingMobilityDrill, Title = "Standing Wrist Rolls", Description = "Extend arms forward, roll wrists in circles 10 times each direction, release tension" },
             
             // Sitting position exercises - Upper body, neck, wrists for desk workers (15 exercises)
             new() { Type = CueType.SittingStretch, Title = "Seated Neck Stretch", Description = "Tilt head to side, gently pull with hand for deeper stretch, 15 seconds each side" },
@@ -136,7 +136,7 @@ public class DataService
             new() { Type = CueType.FloorMobilityDrill, Title = "Hip Circles (Quadruped)", Description = "On all fours, lift one knee out and circle it 10 times each direction, each leg" },
             new() { Type = CueType.FloorMobilityDrill, Title = "Glute Bridges", Description = "Lie on back, feet flat, lift hips high, squeeze glutes at top, 15 reps" },
             new() { Type = CueType.FloorMobilityDrill, Title = "Quadruped Thoracic Rotations", Description = "On all fours, one hand behind head, rotate torso open, 10 times each side" },
-            new() { Type = CueType.FloorMobilityDrill, Title = "Fire Hydrants", Description = "On all fours, lift one knee out to side, hold briefly, lower, 12 reps each leg" }
+            new() { Type = CueType.FloorMobilityDrill, Title = "Kneeling Side Bend Flow", Description = "Kneel upright, reach one arm overhead and bend to side, alternate sides smoothly, 10 each side" }
         };
     }
 
