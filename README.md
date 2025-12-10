@@ -63,6 +63,19 @@ ErgoHealthCue/bin/Release/net8.0-windows/ErgoHealthCue.exe
 
 ### Publishing for Distribution
 
+#### Option 1: Build MSI Installer (Recommended for Distribution)
+
+To create an MSI installer:
+
+```powershell
+cd Installer
+.\BuildInstaller.ps1 -Version "1.0.0"
+```
+
+This will create `ErgoHealthCue-1.0.0-x64.msi` that can be distributed to users.
+
+#### Option 2: Standalone Executable
+
 To create a self-contained executable:
 
 ```bash
