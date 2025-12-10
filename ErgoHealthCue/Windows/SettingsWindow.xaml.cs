@@ -28,12 +28,30 @@ public partial class SettingsWindow : Window
         
         // Load settings to UI
         RandomExerciseIntervalsCheckBox.IsChecked = _settings.UseRandomExerciseIntervals;
-        MinExerciseIntervalTextBox.Text = _settings.MinExerciseIntervalMinutes.ToString();
-        MaxExerciseIntervalTextBox.Text = _settings.MaxExerciseIntervalMinutes.ToString();
+        if (_settings.UseRandomExerciseIntervals)
+        {
+            MinExerciseIntervalTextBox.Text = _settings.MinExerciseIntervalMinutes.ToString();
+            MaxExerciseIntervalTextBox.Text = _settings.MaxExerciseIntervalMinutes.ToString();
+        }
+        else
+        {
+            // When not using random, use MinInterval as the fixed interval
+            FixedExerciseIntervalTextBox.Text = _settings.MinExerciseIntervalMinutes.ToString();
+        }
+        UpdateExerciseIntervalVisibility();
         
         RandomPositionIntervalsCheckBox.IsChecked = _settings.UseRandomPositionIntervals;
-        MinPositionIntervalTextBox.Text = _settings.MinPositionIntervalMinutes.ToString();
-        MaxPositionIntervalTextBox.Text = _settings.MaxPositionIntervalMinutes.ToString();
+        if (_settings.UseRandomPositionIntervals)
+        {
+            MinPositionIntervalTextBox.Text = _settings.MinPositionIntervalMinutes.ToString();
+            MaxPositionIntervalTextBox.Text = _settings.MaxPositionIntervalMinutes.ToString();
+        }
+        else
+        {
+            // When not using random, use MinInterval as the fixed interval
+            FixedPositionIntervalTextBox.Text = _settings.MinPositionIntervalMinutes.ToString();
+        }
+        UpdatePositionIntervalVisibility();
         
         StartupCheckBox.IsChecked = _startupService.IsStartupEnabled();
         
@@ -69,6 +87,44 @@ public partial class SettingsWindow : Window
         
         // Initial filter
         FilterCues();
+    }
+
+    private void RandomExerciseIntervalsCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdateExerciseIntervalVisibility();
+    }
+
+    private void RandomPositionIntervalsCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdatePositionIntervalVisibility();
+    }
+
+    private void UpdateExerciseIntervalVisibility()
+    {
+        if (RandomExerciseIntervalsCheckBox.IsChecked == true)
+        {
+            RandomExerciseIntervalPanel.Visibility = Visibility.Visible;
+            FixedExerciseIntervalPanel.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            RandomExerciseIntervalPanel.Visibility = Visibility.Collapsed;
+            FixedExerciseIntervalPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void UpdatePositionIntervalVisibility()
+    {
+        if (RandomPositionIntervalsCheckBox.IsChecked == true)
+        {
+            RandomPositionIntervalPanel.Visibility = Visibility.Visible;
+            FixedPositionIntervalPanel.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            RandomPositionIntervalPanel.Visibility = Visibility.Collapsed;
+            FixedPositionIntervalPanel.Visibility = Visibility.Visible;
+        }
     }
 
     private void PositionRadio_Checked(object sender, RoutedEventArgs e)
@@ -197,30 +253,65 @@ public partial class SettingsWindow : Window
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        // Validate exercise intervals
-        if (!int.TryParse(MinExerciseIntervalTextBox.Text, out int minExerciseInterval) || minExerciseInterval < 1)
+        int minExerciseInterval, maxExerciseInterval;
+        int minPositionInterval, maxPositionInterval;
+        
+        // Handle exercise intervals
+        if (RandomExerciseIntervalsCheckBox.IsChecked == true)
         {
-            MessageBox.Show("Please enter a valid minimum exercise interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            // Validate random exercise intervals
+            if (!int.TryParse(MinExerciseIntervalTextBox.Text, out minExerciseInterval) || minExerciseInterval < 1)
+            {
+                MessageBox.Show("Please enter a valid minimum exercise interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            
+            if (!int.TryParse(MaxExerciseIntervalTextBox.Text, out maxExerciseInterval) || maxExerciseInterval < minExerciseInterval)
+            {
+                MessageBox.Show("Maximum exercise interval must be greater than or equal to minimum interval.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        }
+        else
+        {
+            // Validate fixed exercise interval
+            if (!int.TryParse(FixedExerciseIntervalTextBox.Text, out int fixedExerciseInterval) || fixedExerciseInterval < 1)
+            {
+                MessageBox.Show("Please enter a valid exercise interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            // For fixed intervals, set both min and max to the same value
+            minExerciseInterval = fixedExerciseInterval;
+            maxExerciseInterval = fixedExerciseInterval;
         }
         
-        if (!int.TryParse(MaxExerciseIntervalTextBox.Text, out int maxExerciseInterval) || maxExerciseInterval < minExerciseInterval)
+        // Handle position intervals
+        if (RandomPositionIntervalsCheckBox.IsChecked == true)
         {
-            MessageBox.Show("Maximum exercise interval must be greater than or equal to minimum interval.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            // Validate random position intervals
+            if (!int.TryParse(MinPositionIntervalTextBox.Text, out minPositionInterval) || minPositionInterval < 1)
+            {
+                MessageBox.Show("Please enter a valid minimum position interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            
+            if (!int.TryParse(MaxPositionIntervalTextBox.Text, out maxPositionInterval) || maxPositionInterval < minPositionInterval)
+            {
+                MessageBox.Show("Maximum position interval must be greater than or equal to minimum interval.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
-        
-        // Validate position intervals
-        if (!int.TryParse(MinPositionIntervalTextBox.Text, out int minPositionInterval) || minPositionInterval < 1)
+        else
         {
-            MessageBox.Show("Please enter a valid minimum position interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-        
-        if (!int.TryParse(MaxPositionIntervalTextBox.Text, out int maxPositionInterval) || maxPositionInterval < minPositionInterval)
-        {
-            MessageBox.Show("Maximum position interval must be greater than or equal to minimum interval.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            // Validate fixed position interval
+            if (!int.TryParse(FixedPositionIntervalTextBox.Text, out int fixedPositionInterval) || fixedPositionInterval < 1)
+            {
+                MessageBox.Show("Please enter a valid position interval (at least 1 minute).", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            // For fixed intervals, set both min and max to the same value
+            minPositionInterval = fixedPositionInterval;
+            maxPositionInterval = fixedPositionInterval;
         }
         
         // Update settings

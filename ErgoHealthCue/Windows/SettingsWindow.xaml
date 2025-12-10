@@ -97,9 +97,24 @@
                          Content="Use Random Exercise Intervals"
                          FontSize="14"
                          Foreground="#374151"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         Checked="RandomExerciseIntervalsCheckBox_Changed"
+                         Unchecked="RandomExerciseIntervalsCheckBox_Changed"/>
                 
-                <Grid>
+                <!-- Fixed Interval (shown when random is unchecked) -->
+                <StackPanel x:Name="FixedExerciseIntervalPanel" Visibility="Collapsed">
+                    <TextBlock Text="Interval (minutes)" 
+                              FontSize="13" 
+                              Foreground="#6B7280" 
+                              Margin="0,0,0,5"/>
+                    <TextBox x:Name="FixedExerciseIntervalTextBox" 
+                            Style="{StaticResource ModernTextBox}"
+                            Width="200"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+                
+                <!-- Random Interval Range (shown when random is checked) -->
+                <Grid x:Name="RandomExerciseIntervalPanel" Visibility="Visible">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
@@ -134,9 +149,24 @@
                          Content="Use Random Position Change Intervals"
                          FontSize="14"
                          Foreground="#374151"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         Checked="RandomPositionIntervalsCheckBox_Changed"
+                         Unchecked="RandomPositionIntervalsCheckBox_Changed"/>
                 
-                <Grid>
+                <!-- Fixed Interval (shown when random is unchecked) -->
+                <StackPanel x:Name="FixedPositionIntervalPanel" Visibility="Collapsed">
+                    <TextBlock Text="Interval (minutes)" 
+                              FontSize="13" 
+                              Foreground="#6B7280" 
+                              Margin="0,0,0,5"/>
+                    <TextBox x:Name="FixedPositionIntervalTextBox" 
+                            Style="{StaticResource ModernTextBox}"
+                            Width="200"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+                
+                <!-- Random Interval Range (shown when random is checked) -->
+                <Grid x:Name="RandomPositionIntervalPanel" Visibility="Visible">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
