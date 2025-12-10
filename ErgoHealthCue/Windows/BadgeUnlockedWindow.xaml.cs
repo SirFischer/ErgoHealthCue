@@ -1,16 +1,35 @@
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace ErgoHealthCue.Windows;
 
 public partial class BadgeUnlockedWindow : Window
 {
-    public BadgeUnlockedWindow(string badgeName, int streakRequired)
+    public BadgeUnlockedWindow(string badgeName, int streakRequired, bool isNegative = false)
     {
         InitializeComponent();
         
         BadgeNameText.Text = badgeName;
-        BadgeDescriptionText.Text = $"Complete {streakRequired} cues in a row!";
+        
+        if (isNegative)
+        {
+            // Negative badge styling - humorous/sarcastic
+            BadgeDescriptionText.Text = $"You dismissed {streakRequired} cues in a row. Really? 😏";
+            BadgeIcon.Text = "💩"; // Poop emoji for negative badges
+            TitleText.Text = "Achievement Unlocked?";
+            TitleText.Foreground = new SolidColorBrush(Color.FromRgb(220, 38, 38)); // Red
+            ContentBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(220, 38, 38)); // Red border
+        }
+        else
+        {
+            // Positive badge styling - celebratory
+            BadgeDescriptionText.Text = $"Complete {streakRequired} cues in a row!";
+            BadgeIcon.Text = "🏆"; // Trophy for positive badges
+            TitleText.Text = "Badge Unlocked!";
+            TitleText.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Gold
+            ContentBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Gold border
+        }
         
         // Start animations
         Loaded += (s, e) => StartAnimations();
@@ -31,9 +50,9 @@ public partial class BadgeUnlockedWindow : Window
     private void StartAnimations()
     {
         // Scale up animation
-        var scaleTransform = new System.Windows.Media.ScaleTransform(0.5, 0.5);
+        var scaleTransform = new ScaleTransform(0.5, 0.5);
         ContentBorder.RenderTransform = scaleTransform;
-        ContentBorder.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+        ContentBorder.RenderTransformOrigin = new Point(0.5, 0.5);
         
         var scaleAnimation = new DoubleAnimation
         {
@@ -43,8 +62,8 @@ public partial class BadgeUnlockedWindow : Window
             EasingFunction = new BackEase { Amplitude = 0.3, EasingMode = EasingMode.EaseOut }
         };
         
-        scaleTransform.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleXProperty, scaleAnimation);
-        scaleTransform.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleYProperty, scaleAnimation);
+        scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
+        scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
         
         // Fade in animation
         var fadeAnimation = new DoubleAnimation

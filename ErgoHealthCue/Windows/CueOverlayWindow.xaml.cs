@@ -298,20 +298,31 @@ public partial class CueOverlayWindow : Window
     
     private void ShowBadgeUnlockedNotification(string badgeName)
     {
-        var badgeRequirements = new Dictionary<string, int>
+        // Check if it's a negative badge (contains emoji or is in negative list)
+        var negativeBadges = new[] { "Rebel 😏", "Procrastinator 🙄", "Dismissive 😒", "Too Busy? 🤔",
+            "Health Denier 😤", "Couch Commander 🛋️", "Button Masher 🖱️", "Chronic Clicker 💢",
+            "Ergonomic Anarchist 🏴", "Professional Ignorer 🙈", "Master Avoider 🏃",
+            "Stubborn Sitter 🪑", "Back Pain Collector 💀" };
+        
+        bool isNegative = negativeBadges.Contains(badgeName);
+        
+        // Get streak requirement from badge name
+        var allBadgeRequirements = new Dictionary<string, int>
         {
-            { "First Steps", 3 },
-            { "Getting Started", 5 },
-            { "Building Habits", 10 },
-            { "Consistency", 15 },
-            { "Dedication", 25 },
-            { "Commitment", 50 },
-            { "Champion", 75 },
-            { "Legend", 100 }
+            // Positive badges (partial list - showing first 20)
+            { "First Step", 1 }, { "Baby Steps", 2 }, { "Getting Going", 3 }, { "Early Bird", 5 },
+            { "Starter", 7 }, { "Beginner", 10 }, { "Novice", 15 }, { "Learner", 20 },
+            { "Apprentice", 25 }, { "Student", 30 }, { "Trainee", 35 }, { "Freshman", 40 },
+            { "Rookie", 45 }, { "Newbie", 50 }, { "Legendary", 10000 },
+            // Negative badges
+            { "Rebel 😏", 3 }, { "Procrastinator 🙄", 5 }, { "Dismissive 😒", 10 }, { "Too Busy? 🤔", 15 },
+            { "Health Denier 😤", 20 }, { "Couch Commander 🛋️", 25 }, { "Button Masher 🖱️", 30 },
+            { "Chronic Clicker 💢", 40 }, { "Ergonomic Anarchist 🏴", 50 }, { "Professional Ignorer 🙈", 75 },
+            { "Master Avoider 🏃", 100 }, { "Stubborn Sitter 🪑", 150 }, { "Back Pain Collector 💀", 200 }
         };
         
-        var streakRequired = badgeRequirements.ContainsKey(badgeName) ? badgeRequirements[badgeName] : 0;
-        var badgeWindow = new BadgeUnlockedWindow(badgeName, streakRequired);
+        var streakRequired = allBadgeRequirements.ContainsKey(badgeName) ? allBadgeRequirements[badgeName] : 0;
+        var badgeWindow = new BadgeUnlockedWindow(badgeName, streakRequired, isNegative);
         badgeWindow.Show();
     }
 
