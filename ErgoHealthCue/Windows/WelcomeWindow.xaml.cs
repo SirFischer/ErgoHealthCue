@@ -6,21 +6,26 @@ namespace ErgoHealthCue.Windows;
 
 public partial class WelcomeWindow : Window
 {
+    private readonly DispatcherTimer _autoCloseTimer;
+    
     public WelcomeWindow()
     {
         InitializeComponent();
         
         // Auto-close after 5 seconds
-        var autoCloseTimer = new DispatcherTimer
+        _autoCloseTimer = new DispatcherTimer
         {
             Interval = TimeSpan.FromSeconds(5)
         };
-        autoCloseTimer.Tick += (s, e) =>
+        _autoCloseTimer.Tick += (s, e) =>
         {
-            autoCloseTimer.Stop();
+            _autoCloseTimer.Stop();
             Close();
         };
-        autoCloseTimer.Start();
+        _autoCloseTimer.Start();
+        
+        // Stop timer when window closes
+        this.Closed += (s, e) => _autoCloseTimer.Stop();
         
         // Animate the content border
         var fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(500));
