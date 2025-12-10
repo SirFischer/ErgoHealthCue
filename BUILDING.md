@@ -6,7 +6,7 @@ This document explains how to build ErgoHealthCue from source and create the MSI
 
 - .NET 8.0 SDK or later
 - Windows OS (for building the MSI installer)
-- WiX Toolset v5 (for creating MSI installer)
+- WiX Toolset v5 (automatically installed by build script)
 
 ## Building the Application
 
@@ -28,65 +28,77 @@ The published files will be in: `ErgoHealthCue/bin/Release/net8.0-windows/win-x6
 
 ## Building the MSI Installer
 
-### Install WiX Toolset
+### Easy Method: Use the Build Script
+
+The easiest way to build the installer is to use the provided PowerShell script:
+
+```powershell
+cd Installer
+.\BuildInstaller.ps1 -Version "1.0.0"
+```
+
+The script will:
+1. Publish the application
+2. Install WiX Toolset if not already installed
+3. Generate the WiX product definition with all files
+4. Build the MSI installer
+
+The MSI installer will be created at: `Installer/ErgoHealthCue-1.0.0-x64.msi`
+
+### Manual Method
+
+If you prefer to build manually:
+
+1. Install WiX Toolset:
 
 ```bash
 dotnet tool install --global wix --version 5.0.2
 ```
 
-### Build Steps
-
-1. First, publish the application:
+2. Publish the application:
 
 ```bash
 dotnet publish ErgoHealthCue/ErgoHealthCue.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false
 ```
 
-2. Build the installer:
+3. Generate the WiX product file:
+
+```powershell
+cd Installer
+.\GenerateWixFile.ps1 -Version "1.0.0"
+```
+
+4. Build the installer:
 
 ```bash
-cd Installer
 wix build -arch x64 Product.wxs -o ErgoHealthCue-1.0.0-x64.msi
 ```
 
-The MSI installer will be created in the `Installer` directory.
+## Creating a Release
 
-## Automated Release via GitHub Actions
+To create a release on GitHub:
 
-The project includes a GitHub Actions workflow that automatically builds and creates releases:
+1. Build the MSI installer using the method above
+2. Go to your repository on GitHub
+3. Click on "Releases" → "Create a new release"
+4. Create a new tag (e.g., `v1.0.0`)
+5. Fill in the release title and description
+6. Upload the MSI installer file
+7. Publish the release
 
-### Creating a Release
-
-#### Method 1: Tag-based Release (Recommended)
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-The workflow will automatically:
-1. Build the application
-2. Create the MSI installer
-3. Create a GitHub release
-4. Upload the MSI as a release asset
-
-#### Method 2: Manual Workflow Dispatch
-
-1. Go to the repository on GitHub
-2. Navigate to Actions → Build and Release
-3. Click "Run workflow"
-4. Enter the version number (e.g., 1.0.0)
-5. Click "Run workflow"
+Users can then download the MSI installer directly from the GitHub Releases page.
 
 ## Version Management
 
-Version numbers are managed in three files:
+Update the version number in `ErgoHealthCue/ErgoHealthCue.csproj`:
 
-1. `ErgoHealthCue/ErgoHealthCue.csproj` - Application version
-2. `Installer/Product.wxs` - Installer version
-3. `Installer/Installer.wixproj` - Installer project version
+```xml
+<Version>1.0.0</Version>
+<AssemblyVersion>1.0.0.0</AssemblyVersion>
+<FileVersion>1.0.0.0</FileVersion>
+```
 
-The GitHub Actions workflow automatically updates all version numbers based on the git tag or manual input.
+The build script will automatically use this version when generating the installer.
 
 ## Testing the Installer
 
@@ -95,10 +107,11 @@ After building the MSI:
 1. **Install**: Double-click the MSI file to install
 2. **Verify**: Check that:
    - Desktop shortcut was created
-   - Start Menu entry exists
-   - Application runs correctly
+   - Start Menu entry exists under "ErgoHealthCue"
+   - Application runs correctly from the shortcut
+   - Application appears in "Add or Remove Programs"
 3. **Upgrade**: Build a new version with incremented version number and install over existing installation
-4. **Uninstall**: Use Windows "Add or Remove Programs" to uninstall
+4. **Uninstall**: Use Windows "Add or Remove Programs" to uninstall cleanly
 
 ## Troubleshooting
 
@@ -107,16 +120,17 @@ After building the MSI:
 If you encounter WiX build errors:
 
 1. Ensure all referenced files exist in the publish directory
-2. Check that file paths in `Product.wxs` are correct
+2. Check that the publish step completed successfully
 3. Verify WiX Toolset is properly installed: `wix --version`
+4. Try running the `GenerateWixFile.ps1` script manually to see if it completes
 
 ### Missing Dependencies
 
 If the installer fails to include all dependencies:
 
-- Ensure `PublishSingleFile=false` is set
+- Ensure `PublishSingleFile=false` is set in the publish command
 - Check the publish output directory for all DLLs
-- Update `Product.wxs` to include any missing files
+- Re-run the `GenerateWixFile.ps1` script to regenerate the product file
 
 ### Version Conflicts
 
@@ -124,4 +138,10 @@ If you get version conflict errors during installation:
 
 - Ensure the version number is higher than the currently installed version
 - Or completely uninstall the old version first
-- Check that the UpgradeCode in `Product.wxs` remains consistent
+- Check that the UpgradeCode in the generated `Product.wxs` remains consistent across versions
+
+## Notes
+
+- The `Product.wxs` file is automatically generated by `GenerateWixFile.ps1` - do not edit it manually
+- The original `Product.wxs` in the repository is a template and will be overwritten during build
+- Each build creates a fresh `Product.wxs` with all current published files included
