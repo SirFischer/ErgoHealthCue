@@ -6,6 +6,39 @@
         ResizeMode="NoResize"
         Background="#F9FAFB">
     
+    <Window.Resources>
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1F2937"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                               BorderBrush="{TemplateBinding BorderBrush}"
+                               BorderThickness="{TemplateBinding BorderThickness}"
+                               CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#9CA3AF"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#6366F1"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -35,19 +68,15 @@
                     <!-- Hours -->
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Hours" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
-                        <TextBox x:Name="HoursTextBox" Text="1" FontSize="14" Padding="8"
-                                 BorderBrush="#D1D5DB" BorderThickness="1"
-                                 IsEnabled="True" IsReadOnly="False" 
-                                 Background="White" Foreground="#1F2937"/>
+                        <TextBox x:Name="HoursTextBox" Text="1" 
+                                 Style="{StaticResource ModernTextBox}"/>
                     </StackPanel>
                     
                     <!-- Minutes -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Minutes" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
-                        <TextBox x:Name="MinutesTextBox" Text="0" FontSize="14" Padding="8"
-                                 BorderBrush="#D1D5DB" BorderThickness="1"
-                                 IsEnabled="True" IsReadOnly="False"
-                                 Background="White" Foreground="#1F2937"/>
+                        <TextBox x:Name="MinutesTextBox" Text="0" 
+                                 Style="{StaticResource ModernTextBox}"/>
                     </StackPanel>
                 </Grid>
                 
