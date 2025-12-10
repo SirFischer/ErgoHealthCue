@@ -5,6 +5,7 @@ using ErgoHealthCue.Models;
 using ErgoHealthCue.Services;
 using ErgoHealthCue.Windows;
 using Application = System.Windows.Application;
+using Strings = ErgoHealthCue.Resources.Strings;
 
 namespace ErgoHealthCue;
 
@@ -21,6 +22,7 @@ public partial class App : Application
     private CueScheduler? _scheduler;
     private AppSettings? _settings;
     private StartupService? _startupService;
+    private ToolStripMenuItem? _pauseResumeMenuItem;
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
@@ -53,19 +55,34 @@ public partial class App : Application
         {
             Icon = new System.Drawing.Icon(GetIconStream()),
             Visible = true,
-            Text = Resources.Strings.AppTitle
+            Text = Strings.AppTitle
         };
 
         var contextMenu = new ContextMenuStrip();
-        contextMenu.Items.Add(Resources.Strings.TriggerCueNow, null, (s, e) => TriggerCueNow());
+        
+        // Pause/Resume menu item (shown first for easy access)
+        _pauseResumeMenuItem = new ToolStripMenuItem(Strings.PauseCues, null, (s, e) => TogglePauseResume());
+        _pauseResumeMenuItem.Font = new System.Drawing.Font(_pauseResumeMenuItem.Font, System.Drawing.FontStyle.Bold);
+        contextMenu.Items.Add(_pauseResumeMenuItem);
         contextMenu.Items.Add("-");
-        contextMenu.Items.Add(Resources.Strings.Settings, null, (s, e) => OpenSettings());
-        contextMenu.Items.Add(Resources.Strings.ProgressStatistics, null, (s, e) => OpenStatistics());
+        
+        contextMenu.Items.Add(Strings.TriggerCueNow, null, (s, e) => TriggerCueNow());
         contextMenu.Items.Add("-");
-        contextMenu.Items.Add(Resources.Strings.Exit, null, (s, e) => Shutdown());
+        contextMenu.Items.Add(Strings.Settings, null, (s, e) => OpenSettings());
+        contextMenu.Items.Add(Strings.ProgressStatistics, null, (s, e) => OpenStatistics());
+        contextMenu.Items.Add("-");
+        contextMenu.Items.Add(Strings.Exit, null, (s, e) => Shutdown());
 
         _notifyIcon.ContextMenuStrip = contextMenu;
         _notifyIcon.DoubleClick += (s, e) => OpenSettings();
+        _notifyIcon.Click += (s, e) => 
+        {
+            var mouseEvent = e as System.Windows.Forms.MouseEventArgs;
+            if (mouseEvent?.Button == MouseButtons.Left)
+            {
+                TogglePauseResume();
+            }
+        };
     }
 
     private System.IO.Stream GetIconStream()
@@ -119,6 +136,31 @@ public partial class App : Application
         Dispatcher.Invoke(() =>
         {
             _scheduler?.TriggerNow(true);
+        });
+    }
+
+    private void TogglePauseResume()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_scheduler?.IsPaused == true)
+            {
+                _scheduler.Resume();
+                if (_pauseResumeMenuItem != null)
+                {
+                    _pauseResumeMenuItem.Text = Strings.PauseCues;
+                }
+                _notifyIcon!.Text = Strings.AppTitle;
+            }
+            else
+            {
+                _scheduler?.Pause();
+                if (_pauseResumeMenuItem != null)
+                {
+                    _pauseResumeMenuItem.Text = Strings.ResumeCues;
+                }
+                _notifyIcon!.Text = Strings.AppTitle + " (Paused)";
+            }
         });
     }
 

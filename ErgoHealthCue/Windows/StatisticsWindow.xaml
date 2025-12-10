@@ -55,6 +55,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -236,8 +237,84 @@
             </Border>
         </Grid>
         
+        <!-- Streak and Badges -->
+        <Grid Grid.Row="3" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Current Streak Card -->
+            <Border Grid.Column="0" 
+                   Background="White" 
+                   BorderBrush="#E5E7EB" 
+                   BorderThickness="1" 
+                   CornerRadius="12" 
+                   Padding="20">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#F97316"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="🔥 Current Streak" 
+                              FontSize="18" 
+                              FontWeight="SemiBold"
+                              Foreground="#111827"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CurrentStreakText" 
+                              Text="0 in a row" 
+                              FontSize="24" 
+                              FontWeight="Bold"
+                              Foreground="#F97316"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="BestStreakText" 
+                              Text="Best: 0" 
+                              FontSize="14" 
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"
+                              Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Badges Card -->
+            <Border Grid.Column="2" 
+                   Background="White" 
+                   BorderBrush="#E5E7EB" 
+                   BorderThickness="1" 
+                   CornerRadius="12" 
+                   Padding="20">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#F59E0B"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="🏆 Badges Unlocked" 
+                              FontSize="18" 
+                              FontWeight="SemiBold"
+                              Foreground="#111827"
+                              HorizontalAlignment="Center"
+                              Margin="0,0,0,10"/>
+                    <TextBlock x:Name="BadgesText" 
+                              Text="0 / 8 badges" 
+                              FontSize="24" 
+                              FontWeight="Bold"
+                              Foreground="#F59E0B"
+                              HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="BadgeNamesText" 
+                              Text="" 
+                              FontSize="12" 
+                              Foreground="#6B7280"
+                              HorizontalAlignment="Center"
+                              TextWrapping="Wrap"
+                              TextAlignment="Center"
+                              Margin="0,8,0,0"
+                              MaxWidth="300"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        
         <!-- History -->
-        <GroupBox Grid.Row="3" Header="History" Style="{StaticResource ModernGroupBox}">
+        <GroupBox Grid.Row="4" Header="History" Style="{StaticResource ModernGroupBox}">
             <DataGrid x:Name="StatisticsDataGrid"
                      AutoGenerateColumns="False"
                      IsReadOnly="True"
@@ -260,7 +337,7 @@
         </GroupBox>
         
         <!-- Buttons -->
-        <StackPanel Grid.Row="4" 
+        <StackPanel Grid.Row="5" 
                    Orientation="Horizontal"
                    HorizontalAlignment="Right"
                    Margin="0,20,0,0">

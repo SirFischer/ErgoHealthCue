@@ -12,6 +12,7 @@ public class CueScheduler
     private readonly DataService _dataService;
     private Guid? _lastExerciseCueId;
     private Guid? _lastPositionCueId;
+    private bool _isPaused;
     
     private static readonly HashSet<CueType> PositionChangeCueTypes = new()
     {
@@ -21,6 +22,7 @@ public class CueScheduler
     };
 
     public event EventHandler<Cue>? CueTriggered;
+    public bool IsPaused => _isPaused;
 
     public CueScheduler(AppSettings settings, DataService dataService)
     {
@@ -46,6 +48,20 @@ public class CueScheduler
     {
         _exerciseTimer.Stop();
         _positionTimer.Stop();
+    }
+
+    public void Pause()
+    {
+        _isPaused = true;
+        _exerciseTimer.Stop();
+        _positionTimer.Stop();
+    }
+
+    public void Resume()
+    {
+        _isPaused = false;
+        _exerciseTimer.Start();
+        _positionTimer.Start();
     }
 
     public void UpdateSettings(AppSettings settings)

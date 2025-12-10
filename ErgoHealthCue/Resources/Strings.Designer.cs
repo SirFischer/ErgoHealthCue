@@ -47,6 +47,8 @@ namespace ErgoHealthCue.Resources {
         public static string ProgressStatistics => ResourceManager.GetString("ProgressStatistics", resourceCulture);
         public static string Exit => ResourceManager.GetString("Exit", resourceCulture);
         public static string TriggerCueNow => ResourceManager.GetString("TriggerCueNow", resourceCulture);
+        public static string PauseCues => ResourceManager.GetString("PauseCues", resourceCulture);
+        public static string ResumeCues => ResourceManager.GetString("ResumeCues", resourceCulture);
         
         // Settings window
         public static string SettingsTitle => ResourceManager.GetString("SettingsTitle", resourceCulture);

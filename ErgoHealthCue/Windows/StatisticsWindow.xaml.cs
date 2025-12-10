@@ -59,6 +59,21 @@ public partial class StatisticsWindow : Window
         ProgressText.Text = $"{settings.Progress.GetProgressPercentage()}%";
         XPText.Text = $"{settings.Progress.CurrentXP} / {settings.Progress.XPForNextLevel()} XP";
         
+        // Update streak information
+        CurrentStreakText.Text = $"{settings.Progress.CurrentStreak} in a row";
+        BestStreakText.Text = $"Best: {settings.Progress.BestStreak}";
+        
+        // Update badges information
+        BadgesText.Text = $"{settings.Progress.UnlockedBadges.Count} / 8 badges";
+        if (settings.Progress.UnlockedBadges.Count > 0)
+        {
+            BadgeNamesText.Text = string.Join(", ", settings.Progress.UnlockedBadges);
+        }
+        else
+        {
+            BadgeNamesText.Text = "Complete cues to unlock badges!";
+        }
+        
         // Filter by selected time period
         var filteredStatistics = FilterByTimePeriod(_allStatistics);
         

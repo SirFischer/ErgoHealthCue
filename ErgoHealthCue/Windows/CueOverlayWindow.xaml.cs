@@ -208,7 +208,20 @@ public partial class CueOverlayWindow : Window
         if (!_isManualTrigger && _potentialXP > 0)
         {
             _settings.Progress.AddXP(_potentialXP);
+            
+            // Increment streak
+            _settings.Progress.IncrementStreak();
+            
+            // Check for new badges
+            var newBadges = _settings.Progress.CheckAndUnlockBadges();
+            
             _dataService.SaveSettings(_settings);
+            
+            // Show badge notifications
+            foreach (var badge in newBadges)
+            {
+                ShowBadgeUnlockedNotification(badge);
+            }
         }
         
         // Update desk position if this was a position change cue
@@ -236,6 +249,10 @@ public partial class CueOverlayWindow : Window
         if (!_isManualTrigger && _penaltyXP > 0)
         {
             _settings.Progress.RemoveXP(_penaltyXP);
+            
+            // Break streak on dismiss
+            _settings.Progress.BreakStreak();
+            
             _dataService.SaveSettings(_settings);
         }
         
@@ -255,10 +272,14 @@ public partial class CueOverlayWindow : Window
         if (!_isManualTrigger && _penaltyXP > 0)
         {
             _settings.Progress.RemoveXP(_penaltyXP);
+            
+            // Break streak on timeout
+            _settings.Progress.BreakStreak();
+            
             _dataService.SaveSettings(_settings);
             
             System.Windows.MessageBox.Show(
-                $"Time's up! You lost {_penaltyXP} XP for not completing the exercise.",
+                $"Time's up! You lost {_penaltyXP} XP for not completing the exercise.\nYour streak has been broken!",
                 "Timeout",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Warning);
@@ -273,6 +294,25 @@ public partial class CueOverlayWindow : Window
         }
         
         Close();
+    }
+    
+    private void ShowBadgeUnlockedNotification(string badgeName)
+    {
+        var badgeRequirements = new Dictionary<string, int>
+        {
+            { "First Steps", 3 },
+            { "Getting Started", 5 },
+            { "Building Habits", 10 },
+            { "Consistency", 15 },
+            { "Dedication", 25 },
+            { "Commitment", 50 },
+            { "Champion", 75 },
+            { "Legend", 100 }
+        };
+        
+        var streakRequired = badgeRequirements.ContainsKey(badgeName) ? badgeRequirements[badgeName] : 0;
+        var badgeWindow = new BadgeUnlockedWindow(badgeName, streakRequired);
+        badgeWindow.Show();
     }
 
     private void ShowLevelUpNotification()
