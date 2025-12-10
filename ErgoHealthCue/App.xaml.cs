@@ -92,7 +92,15 @@ public partial class App : Application
         SetupNotifyIcon();
         
         // Subscribe to session lock/unlock events
-        Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        try
+        {
+            Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        }
+        catch (Exception ex)
+        {
+            // SystemEvents can throw exceptions in some environments
+            System.Diagnostics.Debug.WriteLine($"Failed to subscribe to session events: {ex.Message}");
+        }
         
         // Don't show main window on startup
         MainWindow = new MainWindow();
@@ -100,7 +108,8 @@ public partial class App : Application
     
     private void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
     {
-        Dispatcher.Invoke(() =>
+        // Use BeginInvoke for better UI responsiveness
+        Dispatcher.BeginInvoke(() =>
         {
             switch (e.Reason)
             {
@@ -324,7 +333,15 @@ public partial class App : Application
     private void Application_Exit(object sender, ExitEventArgs e)
     {
         // Unsubscribe from session events
-        Microsoft.Win32.SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        try
+        {
+            Microsoft.Win32.SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        }
+        catch (Exception ex)
+        {
+            // Silently handle unsubscription errors during shutdown
+            System.Diagnostics.Debug.WriteLine($"Failed to unsubscribe from session events: {ex.Message}");
+        }
         
         _notifyIcon?.Dispose();
         _scheduler?.Stop();
