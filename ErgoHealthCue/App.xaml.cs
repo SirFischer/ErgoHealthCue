@@ -25,6 +25,7 @@ public partial class App : Application
     private StartupService? _startupService;
     private LeaderboardService? _leaderboardService;
     private ToolStripMenuItem? _pauseResumeMenuItem;
+    private bool _wasPausedByUser; // Track if pause was user-initiated or automatic
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
@@ -90,8 +91,37 @@ public partial class App : Application
         // Create system tray icon
         SetupNotifyIcon();
         
+        // Subscribe to session lock/unlock events
+        Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        
         // Don't show main window on startup
         MainWindow = new MainWindow();
+    }
+    
+    private void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            switch (e.Reason)
+            {
+                case Microsoft.Win32.SessionSwitchReason.SessionLock:
+                    // Pause timers when session is locked, but only if not already paused by user
+                    if (_scheduler?.IsPaused == false)
+                    {
+                        _wasPausedByUser = false;
+                        _scheduler.Pause();
+                    }
+                    break;
+                    
+                case Microsoft.Win32.SessionSwitchReason.SessionUnlock:
+                    // Resume timers when session is unlocked, but only if it was auto-paused
+                    if (_scheduler?.IsPaused == true && !_wasPausedByUser)
+                    {
+                        _scheduler.Resume();
+                    }
+                    break;
+            }
+        });
     }
     
     private void Scheduler_PauseEnded(object? sender, EventArgs e)
@@ -204,6 +234,7 @@ public partial class App : Application
             if (_scheduler?.IsPaused == true)
             {
                 _scheduler.Resume();
+                _wasPausedByUser = false; // Clear the flag when resuming
                 if (_pauseResumeMenuItem != null)
                 {
                     _pauseResumeMenuItem.Text = Strings.PauseCues;
@@ -217,6 +248,7 @@ public partial class App : Application
                 if (pauseDialog.ShowDialog() == true)
                 {
                     _scheduler?.Pause(pauseDialog.PauseDuration);
+                    _wasPausedByUser = true; // Mark as user-initiated pause
                     if (_pauseResumeMenuItem != null)
                     {
                         _pauseResumeMenuItem.Text = Strings.ResumeCues;
@@ -291,6 +323,9 @@ public partial class App : Application
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
+        // Unsubscribe from session events
+        Microsoft.Win32.SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+        
         _notifyIcon?.Dispose();
         _scheduler?.Stop();
     }
