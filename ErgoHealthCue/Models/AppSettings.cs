@@ -3,13 +3,13 @@ namespace ErgoHealthCue.Models;
 public class AppSettings
 {
     // Exercise intervals
-    public int MinExerciseIntervalMinutes { get; set; } = 30;
-    public int MaxExerciseIntervalMinutes { get; set; } = 45;
+    public int MinExerciseIntervalMinutes { get; set; } = 20;
+    public int MaxExerciseIntervalMinutes { get; set; } = 40;
     public bool UseRandomExerciseIntervals { get; set; } = true;
     
     // Position change intervals
-    public int MinPositionIntervalMinutes { get; set; } = 60;
-    public int MaxPositionIntervalMinutes { get; set; } = 120;
+    public int MinPositionIntervalMinutes { get; set; } = 30;
+    public int MaxPositionIntervalMinutes { get; set; } = 60;
     public bool UseRandomPositionIntervals { get; set; } = true;
     
     // Position availability

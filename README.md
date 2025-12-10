@@ -22,12 +22,23 @@ ErgoHealthCue is a Windows desktop application designed to promote healthy ergon
 
 ## Quick Start
 
-### Prerequisites
+### Download and Install (Recommended)
+
+1. Download the latest MSI installer from the [Releases](https://github.com/SirFischer/ErgoHealthCue/releases) page
+2. Run the installer and follow the installation wizard
+3. Launch ErgoHealthCue from the desktop shortcut or Start Menu
+4. The application will run in your system tray
+
+### Building from Source
+
+If you prefer to build from source:
+
+#### Prerequisites
 
 - .NET 8.0 SDK or later
 - Windows OS (Windows 10 or later recommended)
 
-### Download and Run
+#### Build and Run
 
 1. Clone the repository:
 ```bash
@@ -51,6 +62,19 @@ ErgoHealthCue/bin/Release/net8.0-windows/ErgoHealthCue.exe
 ```
 
 ### Publishing for Distribution
+
+#### Option 1: Build MSI Installer (Recommended for Distribution)
+
+To create an MSI installer:
+
+```powershell
+cd Installer
+.\BuildInstaller.ps1 -Version "1.0.0"
+```
+
+This will create `ErgoHealthCue-1.0.0-x64.msi` that can be distributed to users.
+
+#### Option 2: Standalone Executable
 
 To create a self-contained executable:
 
@@ -151,6 +175,10 @@ The application comes with 7 pre-configured cues:
 ## Leaderboard Setup
 
 To enable the global leaderboard feature, you need to set up a Firebase Realtime Database. See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed instructions.
+
+## Building the Installer
+
+For detailed instructions on building the MSI installer from source, see [BUILDING.md](BUILDING.md).
 
 ## Contributing
 
