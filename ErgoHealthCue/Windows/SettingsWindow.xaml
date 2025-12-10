@@ -140,6 +140,28 @@
                                 Style="{StaticResource ModernTextBox}"/>
                     </StackPanel>
                 </Grid>
+                
+                <!-- Timer Display -->
+                <Border Background="#F3F4F6" 
+                       CornerRadius="8" 
+                       Padding="15" 
+                       Margin="0,15,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="ExerciseTimerText" 
+                                  Text="Exercise timer: Not active" 
+                                  FontSize="13" 
+                                  Foreground="#374151" 
+                                  Margin="0,0,0,8"/>
+                        <ProgressBar x:Name="ExerciseProgressBar" 
+                                    Height="8" 
+                                    Minimum="0" 
+                                    Maximum="100" 
+                                    Value="0"
+                                    Foreground="#6366F1"
+                                    Background="#E5E7EB"
+                                    BorderThickness="0"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </GroupBox>
         
@@ -198,6 +220,28 @@
                          FontSize="14"
                          Foreground="#374151"
                          Margin="0,15,0,0"/>
+                
+                <!-- Timer Display -->
+                <Border Background="#F3F4F6" 
+                       CornerRadius="8" 
+                       Padding="15" 
+                       Margin="0,15,0,0">
+                    <StackPanel>
+                        <TextBlock x:Name="PositionTimerText" 
+                                  Text="Position timer: Not active" 
+                                  FontSize="13" 
+                                  Foreground="#374151" 
+                                  Margin="0,0,0,8"/>
+                        <ProgressBar x:Name="PositionProgressBar" 
+                                    Height="8" 
+                                    Minimum="0" 
+                                    Maximum="100" 
+                                    Value="0"
+                                    Foreground="#6366F1"
+                                    Background="#E5E7EB"
+                                    BorderThickness="0"/>
+                    </StackPanel>
+                </Border>
             </StackPanel>
         </GroupBox>
         
