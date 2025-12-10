@@ -168,8 +168,6 @@ public partial class App : Application
         contextMenu.Items.Add(_pauseResumeMenuItem);
         contextMenu.Items.Add("-");
         
-        contextMenu.Items.Add(Strings.TriggerCueNow, null, (s, e) => TriggerCueNow());
-        contextMenu.Items.Add("-");
         contextMenu.Items.Add(Strings.Settings, null, (s, e) => OpenSettings());
         contextMenu.Items.Add(Strings.ProgressStatistics, null, (s, e) => OpenStatistics());
         contextMenu.Items.Add("🏆 Leaderboard", null, (s, e) => OpenLeaderboard());
