@@ -8,7 +8,6 @@ public class CueScheduler
     private readonly DispatcherTimer _exerciseTimer;
     private readonly DispatcherTimer _positionTimer;
     private readonly DispatcherTimer? _pauseTimer;
-    private readonly Random _random = new();
     private AppSettings _settings;
     private readonly DataService _dataService;
     private Guid? _lastExerciseCueId;
@@ -111,7 +110,7 @@ public class CueScheduler
         
         if (_settings.UseRandomExerciseIntervals)
         {
-            intervalMinutes = _random.Next(_settings.MinExerciseIntervalMinutes, _settings.MaxExerciseIntervalMinutes + 1);
+            intervalMinutes = Random.Shared.Next(_settings.MinExerciseIntervalMinutes, _settings.MaxExerciseIntervalMinutes + 1);
         }
         else
         {
@@ -127,7 +126,7 @@ public class CueScheduler
         
         if (_settings.UseRandomPositionIntervals)
         {
-            intervalMinutes = _random.Next(_settings.MinPositionIntervalMinutes, _settings.MaxPositionIntervalMinutes + 1);
+            intervalMinutes = Random.Shared.Next(_settings.MinPositionIntervalMinutes, _settings.MaxPositionIntervalMinutes + 1);
         }
         else
         {
@@ -225,7 +224,7 @@ public class CueScheduler
 
         if (enabledCues.Count > 0)
         {
-            var selectedCue = enabledCues[_random.Next(enabledCues.Count)];
+            var selectedCue = enabledCues[Random.Shared.Next(enabledCues.Count)];
             _lastPositionCueId = selectedCue.Id;
             CueTriggered?.Invoke(this, selectedCue);
         }
@@ -251,7 +250,7 @@ public class CueScheduler
         if (appropriateCues.Count == 0)
             appropriateCues = exerciseCues;
 
-        return appropriateCues[_random.Next(appropriateCues.Count)];
+        return appropriateCues[Random.Shared.Next(appropriateCues.Count)];
     }
 
     public void UpdatePosition(DeskPosition newPosition)
