@@ -1,8 +1,27 @@
 # Firebase Setup Guide for ErgoHealthCue Leaderboard
 
-This guide will help you set up Firebase Realtime Database to enable the leaderboard feature in ErgoHealthCue.
+## ✅ Firebase Already Configured
 
-## Step 1: Create a Firebase Project
+**Good news!** The Firebase Realtime Database is already set up and configured for ErgoHealthCue. The leaderboard will work out of the box without any additional setup required.
+
+- **Firebase URL**: `https://ergohealthcue-default-rtdb.europe-west1.firebasedatabase.app/`
+- **Region**: europe-west1
+- **Status**: Ready to use
+
+## How to Use the Leaderboard
+
+1. **First Launch**: When you start ErgoHealthCue for the first time, you'll be prompted to enter a username
+2. **Optional**: You can leave the username empty to auto-generate one, or opt-out of the leaderboard entirely
+3. **View Rankings**: Access the leaderboard from the system tray menu or Settings window
+4. **Privacy**: You can disable the leaderboard at any time in Settings
+
+---
+
+## For Developers: Setting Up Your Own Firebase Instance
+
+If you want to set up your own Firebase Realtime Database instance for development or forking purposes, follow these steps:
+
+### Step 1: Create a Firebase Project
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/)
 2. Click **"Add project"** or select an existing project
@@ -49,27 +68,26 @@ These rules:
 ## Step 4: Get Your Database URL
 
 1. In the Realtime Database page, look at the top of the page
-2. You'll see your database URL, which looks like:
-   ```
-   https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com/
-   ```
+2. You'll see your database URL. Depending on your region, it will look like one of these:
+   - US/Global: `https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com/`
+   - Europe: `https://YOUR-PROJECT-ID-default-rtdb.europe-west1.firebasedatabase.app/`
+   - Asia: `https://YOUR-PROJECT-ID-default-rtdb.asia-southeast1.firebasedatabase.app/`
 3. Copy this URL
 
 ## Step 5: Update the Application Code
 
-⚠️ **IMPORTANT**: You must update the Firebase URL in the code before the leaderboard will work.
+⚠️ **IMPORTANT**: You must update the Firebase URL in the code to use your own database.
 
 1. Open the file: `ErgoHealthCue/Services/LeaderboardService.cs`
-2. Find lines 12-14 where the FIREBASE_URL constant is defined:
+2. Find line 13 where the FIREBASE_URL constant is defined:
    ```csharp
-   // TODO: Replace this URL with your own Firebase Realtime Database URL
-   // See FIREBASE_SETUP.md for instructions on how to set up Firebase
-   private const string FIREBASE_URL = "https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com/";
+   private const string FIREBASE_URL = "https://ergohealthcue-default-rtdb.europe-west1.firebasedatabase.app/";
+   private const string FIREBASE_URL = "https://ergohealthcue-default-rtdb.europe-west1.firebasedatabase.app/";
    ```
-3. Replace `YOUR-PROJECT-ID` with your actual Firebase project ID from Step 4
-   - Example: If your URL is `https://ergohealthcue-abc123-default-rtdb.firebaseio.com/`, update the constant to:
+3. Replace the entire URL with your own Firebase Realtime Database URL from Step 4
+   - Example: If your URL is `https://my-ergo-app-default-rtdb.europe-west1.firebasedatabase.app/`, update to:
    ```csharp
-   private const string FIREBASE_URL = "https://ergohealthcue-abc123-default-rtdb.firebaseio.com/";
+   private const string FIREBASE_URL = "https://my-ergo-app-default-rtdb.europe-west1.firebasedatabase.app/";
    ```
 
 ## Step 6: Build and Test

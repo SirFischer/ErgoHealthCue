@@ -176,4 +176,19 @@ public class DataService
             SaveStatistics(statistics);
         }
     }
+    
+    /// <summary>
+    /// Generates a default username from a user ID.
+    /// Safely handles short IDs.
+    /// </summary>
+    public static string GenerateDefaultUsername(string userId)
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            return "User";
+        }
+        
+        int length = Math.Min(8, userId.Length);
+        return $"User{userId.Substring(0, length)}";
+    }
 }

@@ -26,5 +26,5 @@ public class AppSettings
     // Leaderboard settings
     public bool LeaderboardEnabled { get; set; } = true; // Opt-out: enabled by default
     public string Username { get; set; } = string.Empty;
-    public string UserId { get; set; } = Guid.NewGuid().ToString();
+    public string UserId { get; set; } = string.Empty; // Generated on first username setup
 }

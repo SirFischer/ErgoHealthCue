@@ -379,9 +379,10 @@ public partial class CueOverlayWindow : Window
                 dismissedCount
             );
         }
-        catch
+        catch (Exception ex)
         {
             // Silently fail - don't interrupt the user experience
+            System.Diagnostics.Debug.WriteLine($"Failed to update leaderboard: {ex.Message}");
         }
     }
 }

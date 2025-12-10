@@ -68,8 +68,9 @@ public partial class LeaderboardWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to load leaderboard: {ex.Message}", "Error", 
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Diagnostics.Debug.WriteLine($"Failed to load leaderboard: {ex.Message}");
+            MessageBox.Show("Unable to load the leaderboard. Please check your internet connection and try again.", 
+                "Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
             LeaderboardGrid.IsEnabled = true;
         }
     }

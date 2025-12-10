@@ -33,6 +33,41 @@ public partial class App : Application
         _startupService = new StartupService();
         _settings = _dataService.LoadSettings();
         
+        // Check if this is first launch (no UserId set yet)
+        bool isFirstLaunch = string.IsNullOrEmpty(_settings.UserId);
+        
+        // Show username prompt on first launch or if username is empty
+        if (isFirstLaunch || string.IsNullOrWhiteSpace(_settings.Username))
+        {
+            var promptWindow = new UsernamePromptWindow();
+            if (promptWindow.ShowDialog() == true)
+            {
+                // Generate UserId only on first setup
+                if (isFirstLaunch)
+                {
+                    _settings.UserId = Guid.NewGuid().ToString();
+                }
+                
+                _settings.LeaderboardEnabled = promptWindow.LeaderboardEnabled;
+                _settings.Username = promptWindow.Username;
+                
+                // Auto-generate username if empty and leaderboard is enabled
+                if (_settings.LeaderboardEnabled && string.IsNullOrWhiteSpace(_settings.Username))
+                {
+                    _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
+                }
+                
+                _dataService.SaveSettings(_settings);
+            }
+            else if (isFirstLaunch)
+            {
+                // User closed the dialog on first launch, generate defaults
+                _settings.UserId = Guid.NewGuid().ToString();
+                _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
+                _dataService.SaveSettings(_settings);
+            }
+        }
+        
         // Initialize leaderboard service
         _leaderboardService = new LeaderboardService(
             _settings.UserId,
