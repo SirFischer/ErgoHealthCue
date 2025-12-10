@@ -36,14 +36,18 @@
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Hours" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
                         <TextBox x:Name="HoursTextBox" Text="1" FontSize="14" Padding="8"
-                                 BorderBrush="#D1D5DB" BorderThickness="1"/>
+                                 BorderBrush="#D1D5DB" BorderThickness="1"
+                                 IsEnabled="True" IsReadOnly="False" 
+                                 Background="White" Foreground="#1F2937"/>
                     </StackPanel>
                     
                     <!-- Minutes -->
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Minutes" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
                         <TextBox x:Name="MinutesTextBox" Text="0" FontSize="14" Padding="8"
-                                 BorderBrush="#D1D5DB" BorderThickness="1"/>
+                                 BorderBrush="#D1D5DB" BorderThickness="1"
+                                 IsEnabled="True" IsReadOnly="False"
+                                 Background="White" Foreground="#1F2937"/>
                     </StackPanel>
                 </Grid>
                 
