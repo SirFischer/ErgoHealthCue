@@ -37,7 +37,8 @@ public class CueScheduler
             if (!_exerciseTimer.IsEnabled || _isPaused)
                 return TimeSpan.Zero;
             
-            var elapsed = DateTime.Now - _exerciseTimerStartTime;
+            var now = DateTime.UtcNow;
+            var elapsed = now - _exerciseTimerStartTime;
             var remaining = _exerciseTimerInterval - elapsed;
             return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
         }
@@ -50,7 +51,8 @@ public class CueScheduler
             if (!_positionTimer.IsEnabled || _isPaused)
                 return TimeSpan.Zero;
             
-            var elapsed = DateTime.Now - _positionTimerStartTime;
+            var now = DateTime.UtcNow;
+            var elapsed = now - _positionTimerStartTime;
             var remaining = _positionTimerInterval - elapsed;
             return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
         }
@@ -78,8 +80,9 @@ public class CueScheduler
     {
         ScheduleNextExerciseCue();
         ScheduleNextPositionCue();
-        _exerciseTimerStartTime = DateTime.Now;
-        _positionTimerStartTime = DateTime.Now;
+        var now = DateTime.UtcNow;
+        _exerciseTimerStartTime = now;
+        _positionTimerStartTime = now;
         _exerciseTimer.Start();
         _positionTimer.Start();
     }
@@ -113,8 +116,9 @@ public class CueScheduler
     {
         _isPaused = false;
         _pauseTimer?.Stop();
-        _exerciseTimerStartTime = DateTime.Now;
-        _positionTimerStartTime = DateTime.Now;
+        var now = DateTime.UtcNow;
+        _exerciseTimerStartTime = now;
+        _positionTimerStartTime = now;
         _exerciseTimer.Start();
         _positionTimer.Start();
     }
@@ -180,14 +184,14 @@ public class CueScheduler
     {
         TriggerExerciseCue(false);
         ScheduleNextExerciseCue();
-        _exerciseTimerStartTime = DateTime.Now;
+        _exerciseTimerStartTime = DateTime.UtcNow;
     }
 
     private void PositionTimer_Tick(object? sender, EventArgs e)
     {
         TriggerPositionCue();
         ScheduleNextPositionCue();
-        _positionTimerStartTime = DateTime.Now;
+        _positionTimerStartTime = DateTime.UtcNow;
     }
 
     private void TriggerExerciseCue(bool isManual = false)

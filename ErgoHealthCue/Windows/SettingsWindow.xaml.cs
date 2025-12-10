@@ -406,7 +406,9 @@ public partial class SettingsWindow : Window
     
     private void UpdateTimerDisplay()
     {
-        if (_scheduler == null || ExerciseTimerText == null || PositionTimerText == null) return;
+        if (_scheduler == null || ExerciseTimerText == null || PositionTimerText == null ||
+            ExerciseProgressBar == null || PositionProgressBar == null) 
+            return;
         
         var exerciseRemaining = _scheduler.ExerciseTimeRemaining;
         var positionRemaining = _scheduler.PositionTimeRemaining;
@@ -459,6 +461,7 @@ public partial class SettingsWindow : Window
     protected override void OnClosed(EventArgs e)
     {
         _updateTimer.Stop();
+        _updateTimer.Tick -= UpdateTimer_Tick;
         base.OnClosed(e);
     }
 }
