@@ -14,6 +14,10 @@ ErgoHealthCue is a Windows desktop application designed to promote healthy ergon
 - **Flexible Scheduling**: Configure fixed or random intervals between cues (30-60 minutes by default)
 - **Overlay Notifications**: Eye-catching, flashing popup overlays that require acknowledgment
 - **Statistics Tracking**: Track completion rates and response times for all cues
+- **Global Leaderboard**: Compete with other users worldwide (requires Firebase setup)
+  - Compare levels, XP, and completion rates
+  - See your global ranking
+  - Track completed and dismissed cues
 - **Auto-Start**: Optional Windows startup integration
 
 ## Quick Start
@@ -143,6 +147,10 @@ The application comes with 7 pre-configured cues:
 - Verify cues are enabled in settings
 - Check that minimum interval has elapsed
 - Ensure application is still running in system tray
+
+## Leaderboard Setup
+
+To enable the global leaderboard feature, you need to set up a Firebase Realtime Database. See [FIREBASE_SETUP.md](FIREBASE_SETUP.md) for detailed instructions.
 
 ## Contributing
 

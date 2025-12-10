@@ -79,6 +79,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -226,8 +227,88 @@
             </StackPanel>
         </GroupBox>
         
+        <!-- Leaderboard -->
+        <GroupBox Grid.Row="4" Header="🏆 Leaderboard" Style="{StaticResource ModernGroupBox}">
+            <StackPanel>
+                <TextBlock Text="Compete with other users worldwide! The leaderboard is enabled by default." 
+                          FontSize="13" 
+                          Foreground="#6B7280" 
+                          Margin="0,0,0,15"/>
+                
+                <CheckBox x:Name="LeaderboardEnabledCheckBox" 
+                         Content="Enable Leaderboard (uncheck to opt-out)"
+                         FontSize="14"
+                         Foreground="#374151"
+                         Margin="0,0,0,15"/>
+                
+                <TextBlock Text="Username (visible to others, auto-generated if empty):" 
+                          FontSize="13" 
+                          Foreground="#6B7280" 
+                          Margin="0,0,0,5"/>
+                <TextBox x:Name="UsernameTextBox" 
+                        Style="{StaticResource ModernTextBox}"
+                        MaxLength="20"
+                        Margin="0,0,0,10"/>
+                
+                <TextBlock Text="Your stats will be shared: Level, Total XP, Completed Cues, Dismissed Cues" 
+                          FontSize="11" 
+                          Foreground="#9CA3AF" 
+                          FontStyle="Italic"
+                          TextWrapping="Wrap"
+                          Margin="0,5,0,10"/>
+                
+                <Button x:Name="ViewLeaderboardButton"
+                       Content="View Leaderboard"
+                       Width="150"
+                       Height="36"
+                       FontSize="14"
+                       HorizontalAlignment="Left"
+                       Click="ViewLeaderboardButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#FF9800" Offset="0"/>
+                                        <GradientStop Color="#F57C00" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
+                                               CornerRadius="8"
+                                               Padding="15,8">
+                                            <ContentPresenter HorizontalAlignment="Center" 
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#FFA726" Offset="0"/>
+                                                <GradientStop Color="#FB8C00" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </GroupBox>
+        
         <!-- Current Position -->
-        <GroupBox Grid.Row="4" Header="Manage Cues by Position" Style="{StaticResource ModernGroupBox}">
+        <GroupBox Grid.Row="5" Header="Manage Cues by Position" Style="{StaticResource ModernGroupBox}">
             <StackPanel>
                 <TextBlock Text="Select position to view and manage its specific cues:" 
                           FontSize="13" 
@@ -263,7 +344,7 @@
         </GroupBox>
         
         <!-- Cues Management -->
-        <GroupBox Grid.Row="5" Header="Cues" Style="{StaticResource ModernGroupBox}">
+        <GroupBox Grid.Row="6" Header="Cues" Style="{StaticResource ModernGroupBox}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -403,7 +484,7 @@
         </GroupBox>
         
         <!-- Bottom Buttons -->
-        <StackPanel Grid.Row="6" 
+        <StackPanel Grid.Row="7" 
                    Orientation="Horizontal" 
                    HorizontalAlignment="Right"
                    Margin="0,20,0,0">

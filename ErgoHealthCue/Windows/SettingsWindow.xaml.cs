@@ -13,18 +13,20 @@ public partial class SettingsWindow : Window
     private readonly AppSettings _settings;
     private readonly DataService _dataService;
     private readonly StartupService _startupService;
+    private readonly LeaderboardService _leaderboardService;
     private readonly ObservableCollection<Cue> _allCues;
     private readonly ObservableCollection<Cue> _filteredCues;
 
     public AppSettings UpdatedSettings => _settings;
 
-    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService)
+    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService, LeaderboardService leaderboardService)
     {
         InitializeComponent();
         
         _settings = settings;
         _dataService = dataService;
         _startupService = startupService;
+        _leaderboardService = leaderboardService;
         
         // Load settings to UI
         RandomExerciseIntervalsCheckBox.IsChecked = _settings.UseRandomExerciseIntervals;
@@ -65,6 +67,10 @@ public partial class SettingsWindow : Window
                 break;
             }
         }
+        
+        // Load leaderboard settings
+        LeaderboardEnabledCheckBox.IsChecked = _settings.LeaderboardEnabled;
+        UsernameTextBox.Text = _settings.Username;
         
         // Set current position
         switch (_settings.CurrentPosition)
@@ -247,7 +253,7 @@ public partial class SettingsWindow : Window
 
     private void ViewStatsButton_Click(object sender, RoutedEventArgs e)
     {
-        var statsWindow = new StatisticsWindow(_dataService);
+        var statsWindow = new StatisticsWindow(_dataService, _leaderboardService, _settings);
         statsWindow.ShowDialog();
     }
 
@@ -343,6 +349,16 @@ public partial class SettingsWindow : Window
         bool startupEnabled = StartupCheckBox.IsChecked ?? false;
         _startupService.SetStartup(startupEnabled);
         
+        // Save leaderboard settings
+        _settings.LeaderboardEnabled = LeaderboardEnabledCheckBox.IsChecked ?? true;
+        _settings.Username = UsernameTextBox.Text?.Trim() ?? string.Empty;
+        
+        // Generate username if leaderboard is enabled and no username provided
+        if (_settings.LeaderboardEnabled && string.IsNullOrWhiteSpace(_settings.Username))
+        {
+            _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
+        }
+        
         // Save to disk
         _dataService.SaveSettings(_settings);
         
@@ -354,5 +370,18 @@ public partial class SettingsWindow : Window
     {
         DialogResult = false;
         Close();
+    }
+    
+    private void ViewLeaderboardButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Create a temporary leaderboard service to view leaderboard
+        var leaderboardService = new LeaderboardService(
+            _settings.UserId,
+            _settings.Username,
+            _settings.LeaderboardEnabled
+        );
+        
+        var leaderboardWindow = new LeaderboardWindow(leaderboardService, _settings);
+        leaderboardWindow.ShowDialog();
     }
 }

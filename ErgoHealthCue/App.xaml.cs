@@ -6,6 +6,7 @@ using ErgoHealthCue.Services;
 using ErgoHealthCue.Windows;
 using Application = System.Windows.Application;
 using Strings = ErgoHealthCue.Resources.Strings;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ErgoHealthCue;
 
@@ -22,6 +23,7 @@ public partial class App : Application
     private CueScheduler? _scheduler;
     private AppSettings? _settings;
     private StartupService? _startupService;
+    private LeaderboardService? _leaderboardService;
     private ToolStripMenuItem? _pauseResumeMenuItem;
 
     private void Application_Startup(object sender, StartupEventArgs e)
@@ -30,6 +32,48 @@ public partial class App : Application
         _dataService = new DataService();
         _startupService = new StartupService();
         _settings = _dataService.LoadSettings();
+        
+        // Check if this is first launch (no UserId set yet)
+        bool isFirstLaunch = string.IsNullOrEmpty(_settings.UserId);
+        
+        // Show username prompt on first launch or if username is empty
+        if (isFirstLaunch || string.IsNullOrWhiteSpace(_settings.Username))
+        {
+            var promptWindow = new UsernamePromptWindow();
+            if (promptWindow.ShowDialog() == true)
+            {
+                // Generate UserId only on first setup
+                if (isFirstLaunch)
+                {
+                    _settings.UserId = Guid.NewGuid().ToString();
+                }
+                
+                _settings.LeaderboardEnabled = promptWindow.LeaderboardEnabled;
+                _settings.Username = promptWindow.Username;
+                
+                // Auto-generate username if empty and leaderboard is enabled
+                if (_settings.LeaderboardEnabled && string.IsNullOrWhiteSpace(_settings.Username))
+                {
+                    _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
+                }
+                
+                _dataService.SaveSettings(_settings);
+            }
+            else if (isFirstLaunch)
+            {
+                // User closed the dialog on first launch, generate defaults
+                _settings.UserId = Guid.NewGuid().ToString();
+                _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
+                _dataService.SaveSettings(_settings);
+            }
+        }
+        
+        // Initialize leaderboard service
+        _leaderboardService = new LeaderboardService(
+            _settings.UserId,
+            _settings.Username,
+            _settings.LeaderboardEnabled
+        );
         
         // Set language/culture
         SetApplicationLanguage(_settings.Language);
@@ -83,6 +127,7 @@ public partial class App : Application
         contextMenu.Items.Add("-");
         contextMenu.Items.Add(Strings.Settings, null, (s, e) => OpenSettings());
         contextMenu.Items.Add(Strings.ProgressStatistics, null, (s, e) => OpenStatistics());
+        contextMenu.Items.Add("🏆 Leaderboard", null, (s, e) => OpenLeaderboard());
         contextMenu.Items.Add("-");
         contextMenu.Items.Add(Strings.Exit, null, (s, e) => Shutdown());
 
@@ -130,7 +175,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!, _settings!, false);
+            var overlayWindow = new CueOverlayWindow(cue, _dataService!, _scheduler!, _settings!, false, _leaderboardService);
             overlayWindow.Show();
         });
     }
@@ -139,7 +184,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var overlayWindow = new CueOverlayWindow(args.cue, _dataService!, _scheduler!, _settings!, args.isManual);
+            var overlayWindow = new CueOverlayWindow(args.cue, _dataService!, _scheduler!, _settings!, args.isManual, _leaderboardService);
             overlayWindow.Show();
         });
     }
@@ -186,12 +231,19 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!);
+            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!, _leaderboardService!);
             if (settingsWindow.ShowDialog() == true)
             {
                 // Reload settings and update scheduler
                 _settings = _dataService!.LoadSettings();
                 _scheduler!.UpdateSettings(_settings);
+                
+                // Update leaderboard service with new settings
+                _leaderboardService = new LeaderboardService(
+                    _settings.UserId,
+                    _settings.Username,
+                    _settings.LeaderboardEnabled
+                );
             }
         });
     }
@@ -200,8 +252,24 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var statsWindow = new StatisticsWindow(_dataService!);
+            var statsWindow = new StatisticsWindow(_dataService!, _leaderboardService!, _settings!);
             statsWindow.ShowDialog();
+        });
+    }
+    
+    private void OpenLeaderboard()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (!_settings!.LeaderboardEnabled)
+            {
+                MessageBox.Show("The leaderboard is currently disabled. Enable it in Settings to view rankings.", 
+                    "Leaderboard Disabled", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            
+            var leaderboardWindow = new LeaderboardWindow(_leaderboardService!, _settings);
+            leaderboardWindow.ShowDialog();
         });
     }
 
