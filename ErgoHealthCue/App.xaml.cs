@@ -102,6 +102,10 @@ public partial class App : Application
             System.Diagnostics.Debug.WriteLine($"Failed to subscribe to session events: {ex.Message}");
         }
         
+        // Show welcome popup on startup
+        var welcomeWindow = new WelcomeWindow();
+        welcomeWindow.Show();
+        
         // Don't show main window on startup
         MainWindow = new MainWindow();
     }
