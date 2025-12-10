@@ -1,0 +1,66 @@
+<Window x:Class="ErgoHealthCue.Windows.PauseDurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pause Duration" Height="250" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F9FAFB">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="⏸️ Pause Cues" FontSize="20" FontWeight="Bold" Foreground="#1F2937"/>
+            <TextBlock Text="Set how long to pause reminders (max 8 hours)" FontSize="12" Foreground="#6B7280" Margin="0,5,0,0"/>
+        </StackPanel>
+        
+        <!-- Duration Selection -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="20"
+                BorderBrush="#E5E7EB" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="Pause Duration:" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,10"/>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Hours -->
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Hours" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
+                        <TextBox x:Name="HoursTextBox" Text="1" FontSize="14" Padding="8"
+                                 BorderBrush="#D1D5DB" BorderThickness="1"
+                                 IsEnabled="True" IsReadOnly="False" 
+                                 Background="White" Foreground="#1F2937"/>
+                    </StackPanel>
+                    
+                    <!-- Minutes -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Minutes" FontSize="11" Foreground="#6B7280" Margin="0,0,0,5"/>
+                        <TextBox x:Name="MinutesTextBox" Text="0" FontSize="14" Padding="8"
+                                 BorderBrush="#D1D5DB" BorderThickness="1"
+                                 IsEnabled="True" IsReadOnly="False"
+                                 Background="White" Foreground="#1F2937"/>
+                    </StackPanel>
+                </Grid>
+                
+                <TextBlock x:Name="ErrorText" Text="" Foreground="#DC2626" FontSize="11" Margin="0,10,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Cancel" Click="CancelButton_Click" Width="80" Height="36" Margin="0,0,10,0"
+                    Background="#F3F4F6" Foreground="#374151" BorderBrush="#D1D5DB" BorderThickness="1"/>
+            <Button Content="Pause" Click="PauseButton_Click" Width="80" Height="36"
+                    Background="#6366F1" Foreground="White" BorderThickness="0" FontWeight="SemiBold"/>
+        </StackPanel>
+    </Grid>
+</Window>
