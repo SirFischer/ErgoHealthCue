@@ -13,6 +13,10 @@ public class CueScheduler
     private Guid? _lastExerciseCueId;
     private Guid? _lastPositionCueId;
     private bool _isPaused;
+    private DateTime _exerciseTimerStartTime;
+    private DateTime _positionTimerStartTime;
+    private TimeSpan _exerciseTimerInterval;
+    private TimeSpan _positionTimerInterval;
     
     private static readonly HashSet<CueType> PositionChangeCueTypes = new()
     {
@@ -24,6 +28,36 @@ public class CueScheduler
     public event EventHandler<Cue>? CueTriggered;
     public event EventHandler? PauseEnded;
     public bool IsPaused => _isPaused;
+    
+    // Properties to expose timer state
+    public TimeSpan ExerciseTimeRemaining 
+    {
+        get
+        {
+            if (!_exerciseTimer.IsEnabled || _isPaused)
+                return TimeSpan.Zero;
+            
+            var elapsed = DateTime.Now - _exerciseTimerStartTime;
+            var remaining = _exerciseTimerInterval - elapsed;
+            return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+        }
+    }
+    
+    public TimeSpan PositionTimeRemaining 
+    {
+        get
+        {
+            if (!_positionTimer.IsEnabled || _isPaused)
+                return TimeSpan.Zero;
+            
+            var elapsed = DateTime.Now - _positionTimerStartTime;
+            var remaining = _positionTimerInterval - elapsed;
+            return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+        }
+    }
+    
+    public TimeSpan ExerciseTimerInterval => _exerciseTimerInterval;
+    public TimeSpan PositionTimerInterval => _positionTimerInterval;
 
     public CueScheduler(AppSettings settings, DataService dataService)
     {
@@ -44,6 +78,8 @@ public class CueScheduler
     {
         ScheduleNextExerciseCue();
         ScheduleNextPositionCue();
+        _exerciseTimerStartTime = DateTime.Now;
+        _positionTimerStartTime = DateTime.Now;
         _exerciseTimer.Start();
         _positionTimer.Start();
     }
@@ -77,6 +113,8 @@ public class CueScheduler
     {
         _isPaused = false;
         _pauseTimer?.Stop();
+        _exerciseTimerStartTime = DateTime.Now;
+        _positionTimerStartTime = DateTime.Now;
         _exerciseTimer.Start();
         _positionTimer.Start();
     }
@@ -117,7 +155,8 @@ public class CueScheduler
             intervalMinutes = _settings.MinExerciseIntervalMinutes;
         }
 
-        _exerciseTimer.Interval = TimeSpan.FromMinutes(intervalMinutes);
+        _exerciseTimerInterval = TimeSpan.FromMinutes(intervalMinutes);
+        _exerciseTimer.Interval = _exerciseTimerInterval;
     }
 
     private void ScheduleNextPositionCue()
@@ -133,19 +172,22 @@ public class CueScheduler
             intervalMinutes = _settings.MinPositionIntervalMinutes;
         }
 
-        _positionTimer.Interval = TimeSpan.FromMinutes(intervalMinutes);
+        _positionTimerInterval = TimeSpan.FromMinutes(intervalMinutes);
+        _positionTimer.Interval = _positionTimerInterval;
     }
 
     private void ExerciseTimer_Tick(object? sender, EventArgs e)
     {
         TriggerExerciseCue(false);
         ScheduleNextExerciseCue();
+        _exerciseTimerStartTime = DateTime.Now;
     }
 
     private void PositionTimer_Tick(object? sender, EventArgs e)
     {
         TriggerPositionCue();
         ScheduleNextPositionCue();
+        _positionTimerStartTime = DateTime.Now;
     }
 
     private void TriggerExerciseCue(bool isManual = false)

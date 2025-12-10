@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using ErgoHealthCue.Models;
 using ErgoHealthCue.Services;
 using MessageBox = System.Windows.MessageBox;
@@ -14,12 +15,14 @@ public partial class SettingsWindow : Window
     private readonly DataService _dataService;
     private readonly StartupService _startupService;
     private readonly LeaderboardService _leaderboardService;
+    private readonly CueScheduler? _scheduler;
     private readonly ObservableCollection<Cue> _allCues;
     private readonly ObservableCollection<Cue> _filteredCues;
+    private readonly DispatcherTimer _updateTimer;
 
     public AppSettings UpdatedSettings => _settings;
 
-    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService, LeaderboardService leaderboardService)
+    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService, LeaderboardService leaderboardService, CueScheduler? scheduler = null)
     {
         InitializeComponent();
         
@@ -27,6 +30,15 @@ public partial class SettingsWindow : Window
         _dataService = dataService;
         _startupService = startupService;
         _leaderboardService = leaderboardService;
+        _scheduler = scheduler;
+        
+        // Setup update timer for countdown displays
+        _updateTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _updateTimer.Tick += UpdateTimer_Tick;
+        _updateTimer.Start();
         
         // Load settings to UI
         RandomExerciseIntervalsCheckBox.IsChecked = _settings.UseRandomExerciseIntervals;
@@ -383,5 +395,70 @@ public partial class SettingsWindow : Window
         
         var leaderboardWindow = new LeaderboardWindow(leaderboardService, _settings);
         leaderboardWindow.ShowDialog();
+    }
+    
+    private void UpdateTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_scheduler == null) return;
+        
+        UpdateTimerDisplay();
+    }
+    
+    private void UpdateTimerDisplay()
+    {
+        if (_scheduler == null || ExerciseTimerText == null || PositionTimerText == null) return;
+        
+        var exerciseRemaining = _scheduler.ExerciseTimeRemaining;
+        var positionRemaining = _scheduler.PositionTimeRemaining;
+        var exerciseTotal = _scheduler.ExerciseTimerInterval;
+        var positionTotal = _scheduler.PositionTimerInterval;
+        
+        // Update exercise timer
+        if (exerciseRemaining > TimeSpan.Zero && exerciseTotal > TimeSpan.Zero)
+        {
+            ExerciseTimerText.Text = $"Next exercise in: {FormatTimeSpan(exerciseRemaining)}";
+            ExerciseProgressBar.Maximum = exerciseTotal.TotalSeconds;
+            ExerciseProgressBar.Value = (exerciseTotal - exerciseRemaining).TotalSeconds;
+        }
+        else
+        {
+            ExerciseTimerText.Text = "Exercise timer: Not active";
+            ExerciseProgressBar.Value = 0;
+        }
+        
+        // Update position timer
+        if (positionRemaining > TimeSpan.Zero && positionTotal > TimeSpan.Zero)
+        {
+            PositionTimerText.Text = $"Next position change in: {FormatTimeSpan(positionRemaining)}";
+            PositionProgressBar.Maximum = positionTotal.TotalSeconds;
+            PositionProgressBar.Value = (positionTotal - positionRemaining).TotalSeconds;
+        }
+        else
+        {
+            PositionTimerText.Text = "Position timer: Not active";
+            PositionProgressBar.Value = 0;
+        }
+    }
+    
+    private string FormatTimeSpan(TimeSpan timeSpan)
+    {
+        if (timeSpan.TotalHours >= 1)
+        {
+            return $"{(int)timeSpan.TotalHours}h {timeSpan.Minutes}m {timeSpan.Seconds}s";
+        }
+        else if (timeSpan.TotalMinutes >= 1)
+        {
+            return $"{timeSpan.Minutes}m {timeSpan.Seconds}s";
+        }
+        else
+        {
+            return $"{timeSpan.Seconds}s";
+        }
+    }
+    
+    protected override void OnClosed(EventArgs e)
+    {
+        _updateTimer.Stop();
+        base.OnClosed(e);
     }
 }

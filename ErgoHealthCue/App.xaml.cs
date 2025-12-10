@@ -276,7 +276,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!, _leaderboardService!);
+            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!, _leaderboardService!, _scheduler!);
             if (settingsWindow.ShowDialog() == true)
             {
                 // Reload settings and update scheduler
