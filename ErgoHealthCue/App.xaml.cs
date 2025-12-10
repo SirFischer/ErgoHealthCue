@@ -105,16 +105,16 @@ public partial class App : Application
             switch (e.Reason)
             {
                 case Microsoft.Win32.SessionSwitchReason.SessionLock:
-                    // Pause timers when session is locked, but only if not already paused by user
+                    // Pause timers when session is locked, but only if not already paused
                     if (_scheduler?.IsPaused == false)
                     {
-                        _wasPausedByUser = false;
+                        // Don't set _wasPausedByUser - this is an automatic pause
                         _scheduler.Pause();
                     }
                     break;
                     
                 case Microsoft.Win32.SessionSwitchReason.SessionUnlock:
-                    // Resume timers when session is unlocked, but only if it was auto-paused
+                    // Resume timers when session is unlocked, but only if it was auto-paused (not user-initiated)
                     if (_scheduler?.IsPaused == true && !_wasPausedByUser)
                     {
                         _scheduler.Resume();
