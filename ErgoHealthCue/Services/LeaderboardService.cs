@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using ErgoHealthCue.Models;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -8,7 +10,7 @@ namespace ErgoHealthCue.Services;
 public class LeaderboardService
 {
     private readonly FirebaseClient _firebaseClient;
-    private const string FIREBASE_URL = "https://ergohealthcue-default-rtdb.firebaseio.com/";
+    private const string FIREBASE_URL = "https://ergohealthcue-default-rtdb.europe-west1.firebasedatabase.app/";
     private readonly string _userId;
     private readonly string _username;
     private bool _isEnabled;

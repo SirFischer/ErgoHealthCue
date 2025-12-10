@@ -24,7 +24,7 @@ public class AppSettings
     public UserProgress Progress { get; set; } = new();
     
     // Leaderboard settings
-    public bool LeaderboardEnabled { get; set; } = false;
+    public bool LeaderboardEnabled { get; set; } = true; // Opt-out: enabled by default
     public string Username { get; set; } = string.Empty;
     public string UserId { get; set; } = Guid.NewGuid().ToString();
 }

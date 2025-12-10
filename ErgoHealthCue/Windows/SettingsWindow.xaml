@@ -230,18 +230,18 @@
         <!-- Leaderboard -->
         <GroupBox Grid.Row="4" Header="🏆 Leaderboard" Style="{StaticResource ModernGroupBox}">
             <StackPanel>
-                <TextBlock Text="Join the global leaderboard and compete with other users!" 
+                <TextBlock Text="Compete with other users worldwide! The leaderboard is enabled by default." 
                           FontSize="13" 
                           Foreground="#6B7280" 
                           Margin="0,0,0,15"/>
                 
                 <CheckBox x:Name="LeaderboardEnabledCheckBox" 
-                         Content="Enable Leaderboard"
+                         Content="Enable Leaderboard (uncheck to opt-out)"
                          FontSize="14"
                          Foreground="#374151"
                          Margin="0,0,0,15"/>
                 
-                <TextBlock Text="Username (visible to others):" 
+                <TextBlock Text="Username (visible to others, auto-generated if empty):" 
                           FontSize="13" 
                           Foreground="#6B7280" 
                           Margin="0,0,0,5"/>

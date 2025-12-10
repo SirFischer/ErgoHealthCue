@@ -57,12 +57,20 @@ These rules:
 
 ## Step 5: Update the Application Code
 
+⚠️ **IMPORTANT**: You must update the Firebase URL in the code before the leaderboard will work.
+
 1. Open the file: `ErgoHealthCue/Services/LeaderboardService.cs`
-2. Find line 11 where the FIREBASE_URL constant is defined:
+2. Find lines 12-14 where the FIREBASE_URL constant is defined:
    ```csharp
-   private const string FIREBASE_URL = "https://ergohealthcue-default-rtdb.firebaseio.com/";
+   // TODO: Replace this URL with your own Firebase Realtime Database URL
+   // See FIREBASE_SETUP.md for instructions on how to set up Firebase
+   private const string FIREBASE_URL = "https://YOUR-PROJECT-ID-default-rtdb.firebaseio.com/";
    ```
-3. Replace the URL with your own Firebase Realtime Database URL from Step 4
+3. Replace `YOUR-PROJECT-ID` with your actual Firebase project ID from Step 4
+   - Example: If your URL is `https://ergohealthcue-abc123-default-rtdb.firebaseio.com/`, update the constant to:
+   ```csharp
+   private const string FIREBASE_URL = "https://ergohealthcue-abc123-default-rtdb.firebaseio.com/";
+   ```
 
 ## Step 6: Build and Test
 

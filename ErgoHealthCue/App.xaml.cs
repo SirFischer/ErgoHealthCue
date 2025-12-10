@@ -226,10 +226,10 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            if (!_settings!.LeaderboardEnabled || string.IsNullOrWhiteSpace(_settings.Username))
+            if (!_settings!.LeaderboardEnabled)
             {
-                MessageBox.Show("Please enable the leaderboard and set a username in Settings first.", 
-                    "Leaderboard Not Enabled", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("The leaderboard is currently disabled. Enable it in Settings to view rankings.", 
+                    "Leaderboard Disabled", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             

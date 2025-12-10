@@ -68,6 +68,12 @@ public partial class SettingsWindow : Window
         
         // Load leaderboard settings
         LeaderboardEnabledCheckBox.IsChecked = _settings.LeaderboardEnabled;
+        
+        // Generate default username if empty and leaderboard is enabled
+        if (string.IsNullOrWhiteSpace(_settings.Username) && _settings.LeaderboardEnabled)
+        {
+            _settings.Username = $"User{_settings.UserId.Substring(0, 8)}";
+        }
         UsernameTextBox.Text = _settings.Username;
         
         // Set current position
@@ -348,14 +354,13 @@ public partial class SettingsWindow : Window
         _startupService.SetStartup(startupEnabled);
         
         // Save leaderboard settings
-        _settings.LeaderboardEnabled = LeaderboardEnabledCheckBox.IsChecked ?? false;
+        _settings.LeaderboardEnabled = LeaderboardEnabledCheckBox.IsChecked ?? true;
         _settings.Username = UsernameTextBox.Text?.Trim() ?? string.Empty;
         
-        // Validate username if leaderboard is enabled
+        // Generate username if leaderboard is enabled and no username provided
         if (_settings.LeaderboardEnabled && string.IsNullOrWhiteSpace(_settings.Username))
         {
-            MessageBox.Show("Please enter a username to enable the leaderboard.", "Username Required", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
+            _settings.Username = $"User{_settings.UserId.Substring(0, 8)}";
         }
         
         // Save to disk
