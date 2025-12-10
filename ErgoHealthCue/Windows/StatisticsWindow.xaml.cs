@@ -64,7 +64,7 @@ public partial class StatisticsWindow : Window
         BestStreakText.Text = $"Best: {settings.Progress.BestStreak}";
         
         // Update badges information
-        BadgesText.Text = $"{settings.Progress.UnlockedBadges.Count} / 8 badges";
+        BadgesText.Text = $"{settings.Progress.UnlockedBadges.Count} / 9 badges";
         if (settings.Progress.UnlockedBadges.Count > 0)
         {
             BadgeNamesText.Text = string.Join(", ", settings.Progress.UnlockedBadges);

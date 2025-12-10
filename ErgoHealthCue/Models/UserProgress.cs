@@ -13,9 +13,11 @@ public class UserProgress
     
     public int XPForNextLevel()
     {
-        // Progressive XP requirement: Level * 100 XP
-        // Level 1->2: 100 XP, Level 2->3: 200 XP, etc.
-        return Level * 100;
+        // Progressive XP requirement adjusted for ~3 years to reach level 100
+        // With ~10 cues/day averaging 20 XP each = ~200 XP/day = ~73,000 XP/year
+        // Total for 3 years: ~219,000 XP
+        // Level 1->2: 500 XP, Level 2->3: 1000 XP, Level 3->4: 1500 XP, etc.
+        return Level * 500;
     }
     
     public void AddXP(int xp)
@@ -71,22 +73,24 @@ public class UserProgress
     {
         var newBadges = new List<string>();
         
-        // Badge definitions - achievable during work hours
+        // Badge definitions - adjusted to take several years to complete
+        // At ~10 cues/day, achievements span from 1 day to ~3 years
         var badgeDefinitions = new Dictionary<string, int>
         {
-            { "First Steps", 3 },        // 3 in a row (very easy - first day)
-            { "Getting Started", 5 },     // 5 in a row (easy - first day)
-            { "Building Habits", 10 },    // 10 in a row (moderate - a few days)
-            { "Consistency", 15 },        // 15 in a row (good - several days)
-            { "Dedication", 25 },         // 25 in a row (impressive - ~1 week)
-            { "Commitment", 50 },         // 50 in a row (great - ~2 weeks)
-            { "Champion", 75 },           // 75 in a row (amazing - ~3 weeks)
-            { "Legend", 100 }             // 100 in a row (legendary - ~1 month)
+            { "First Steps", 10 },           // 10 in a row (~1 day)
+            { "Getting Started", 50 },       // 50 in a row (~5 days)
+            { "Building Habits", 100 },      // 100 in a row (~2 weeks)
+            { "Dedication", 250 },           // 250 in a row (~1 month)
+            { "Committed", 500 },            // 500 in a row (~2 months)
+            { "Champion", 1000 },            // 1000 in a row (~4 months)
+            { "Master", 2500 },              // 2500 in a row (~10 months)
+            { "Grandmaster", 5000 },         // 5000 in a row (~1.5 years)
+            { "Legend", 10000 }              // 10000 in a row (~3 years)
         };
         
         foreach (var badge in badgeDefinitions)
         {
-            if (BestStreak >= badge.Value && !UnlockedBadges.Contains(badge.Key))
+            if (CurrentStreak >= badge.Value && !UnlockedBadges.Contains(badge.Key))
             {
                 UnlockedBadges.Add(badge.Key);
                 newBadges.Add(badge.Key);

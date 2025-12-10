@@ -7,6 +7,7 @@ public class CueScheduler
 {
     private readonly DispatcherTimer _exerciseTimer;
     private readonly DispatcherTimer _positionTimer;
+    private readonly DispatcherTimer? _pauseTimer;
     private readonly Random _random = new();
     private AppSettings _settings;
     private readonly DataService _dataService;
@@ -22,6 +23,7 @@ public class CueScheduler
     };
 
     public event EventHandler<Cue>? CueTriggered;
+    public event EventHandler? PauseEnded;
     public bool IsPaused => _isPaused;
 
     public CueScheduler(AppSettings settings, DataService dataService)
@@ -34,6 +36,9 @@ public class CueScheduler
         
         _positionTimer = new DispatcherTimer();
         _positionTimer.Tick += PositionTimer_Tick;
+        
+        _pauseTimer = new DispatcherTimer();
+        _pauseTimer.Tick += PauseTimer_Tick;
     }
 
     public void Start()
@@ -55,13 +60,33 @@ public class CueScheduler
         _isPaused = true;
         _exerciseTimer.Stop();
         _positionTimer.Stop();
+        _pauseTimer?.Stop();
+    }
+    
+    public void Pause(TimeSpan duration)
+    {
+        _isPaused = true;
+        _exerciseTimer.Stop();
+        _positionTimer.Stop();
+        
+        // Set up auto-resume timer
+        _pauseTimer!.Interval = duration;
+        _pauseTimer.Start();
     }
 
     public void Resume()
     {
         _isPaused = false;
+        _pauseTimer?.Stop();
         _exerciseTimer.Start();
         _positionTimer.Start();
+    }
+    
+    private void PauseTimer_Tick(object? sender, EventArgs e)
+    {
+        _pauseTimer?.Stop();
+        Resume();
+        PauseEnded?.Invoke(this, EventArgs.Empty);
     }
 
     public void UpdateSettings(AppSettings settings)

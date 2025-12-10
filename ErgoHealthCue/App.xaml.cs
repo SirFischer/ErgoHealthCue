@@ -38,6 +38,7 @@ public partial class App : Application
         // Subscribe to cue events
         _scheduler.CueTriggered += Scheduler_CueTriggered;
         _scheduler.CueTriggeredManually += Scheduler_CueTriggeredManually;
+        _scheduler.PauseEnded += Scheduler_PauseEnded;
         
         // Start the scheduler
         _scheduler.Start();
@@ -47,6 +48,18 @@ public partial class App : Application
         
         // Don't show main window on startup
         MainWindow = new MainWindow();
+    }
+    
+    private void Scheduler_PauseEnded(object? sender, EventArgs e)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (_pauseResumeMenuItem != null)
+            {
+                _pauseResumeMenuItem.Text = Strings.PauseCues;
+            }
+            _notifyIcon!.Text = Strings.AppTitle;
+        });
     }
 
     private void SetupNotifyIcon()
@@ -154,12 +167,17 @@ public partial class App : Application
             }
             else
             {
-                _scheduler?.Pause();
-                if (_pauseResumeMenuItem != null)
+                // Show pause duration dialog
+                var pauseDialog = new PauseDurationWindow();
+                if (pauseDialog.ShowDialog() == true)
                 {
-                    _pauseResumeMenuItem.Text = Strings.ResumeCues;
+                    _scheduler?.Pause(pauseDialog.PauseDuration);
+                    if (_pauseResumeMenuItem != null)
+                    {
+                        _pauseResumeMenuItem.Text = Strings.ResumeCues;
+                    }
+                    _notifyIcon!.Text = Strings.AppTitle + " (Paused)";
                 }
-                _notifyIcon!.Text = Strings.AppTitle + " (Paused)";
             }
         });
     }
