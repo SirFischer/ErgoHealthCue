@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErgoHealthCue", "ErgoHealthCue\ErgoHealthCue.csproj", "{56DF6C61-1DE2-41D8-879B-89B6F7AC6C46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Installer\Installer.wixproj", "{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,16 @@ Global
 		{56DF6C61-1DE2-41D8-879B-89B6F7AC6C46}.Release|x64.Build.0 = Release|Any CPU
 		{56DF6C61-1DE2-41D8-879B-89B6F7AC6C46}.Release|x86.ActiveCfg = Release|Any CPU
 		{56DF6C61-1DE2-41D8-879B-89B6F7AC6C46}.Release|x86.Build.0 = Release|Any CPU
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Debug|Any CPU.Build.0 = Debug|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Debug|x64.ActiveCfg = Debug|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Debug|x64.Build.0 = Debug|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Debug|x86.ActiveCfg = Debug|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Release|Any CPU.ActiveCfg = Release|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Release|Any CPU.Build.0 = Release|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Release|x64.ActiveCfg = Release|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Release|x64.Build.0 = Release|x64
+		{8B9F8C7E-2A3D-4E5F-9B8C-1D6E7F8A9C0D}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
