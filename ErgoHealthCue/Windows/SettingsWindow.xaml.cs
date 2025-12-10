@@ -13,18 +13,20 @@ public partial class SettingsWindow : Window
     private readonly AppSettings _settings;
     private readonly DataService _dataService;
     private readonly StartupService _startupService;
+    private readonly LeaderboardService _leaderboardService;
     private readonly ObservableCollection<Cue> _allCues;
     private readonly ObservableCollection<Cue> _filteredCues;
 
     public AppSettings UpdatedSettings => _settings;
 
-    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService)
+    public SettingsWindow(AppSettings settings, DataService dataService, StartupService startupService, LeaderboardService leaderboardService)
     {
         InitializeComponent();
         
         _settings = settings;
         _dataService = dataService;
         _startupService = startupService;
+        _leaderboardService = leaderboardService;
         
         // Load settings to UI
         RandomExerciseIntervalsCheckBox.IsChecked = _settings.UseRandomExerciseIntervals;
@@ -251,7 +253,7 @@ public partial class SettingsWindow : Window
 
     private void ViewStatsButton_Click(object sender, RoutedEventArgs e)
     {
-        var statsWindow = new StatisticsWindow(_dataService);
+        var statsWindow = new StatisticsWindow(_dataService, _leaderboardService, _settings);
         statsWindow.ShowDialog();
     }
 

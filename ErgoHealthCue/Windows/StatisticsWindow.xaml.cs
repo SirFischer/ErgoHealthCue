@@ -31,12 +31,16 @@ public class StatusConverter : IValueConverter
 public partial class StatisticsWindow : Window
 {
     private readonly DataService _dataService;
+    private readonly LeaderboardService _leaderboardService;
+    private readonly AppSettings _settings;
     private List<CueStatistic> _allStatistics;
 
-    public StatisticsWindow(DataService dataService)
+    public StatisticsWindow(DataService dataService, LeaderboardService leaderboardService, AppSettings settings)
     {
         InitializeComponent();
         _dataService = dataService;
+        _leaderboardService = leaderboardService;
+        _settings = settings;
         _allStatistics = _dataService.LoadStatistics();
         LoadStatistics();
     }
@@ -191,7 +195,7 @@ public partial class StatisticsWindow : Window
     private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
     {
         var result = System.Windows.MessageBox.Show(
-            "Are you sure you want to permanently delete all statistics and reset your level?\n\nThis action cannot be undone.",
+            "Are you sure you want to permanently delete all statistics and reset your level?\n\nThis action cannot be undone and will also reset your leaderboard data.",
             "Reset Statistics & Level",
             System.Windows.MessageBoxButton.YesNo,
             System.Windows.MessageBoxImage.Warning);
@@ -206,6 +210,13 @@ public partial class StatisticsWindow : Window
             var settings = _dataService.LoadSettings();
             settings.Progress = new UserProgress(); // Reset to level 1, 0 XP
             _dataService.SaveSettings(settings);
+            
+            // Update leaderboard with reset data
+            _ = _leaderboardService.UpdateLeaderboardAsync(
+                settings.Progress,
+                0, // 0 completed cues
+                0  // 0 dismissed cues
+            );
             
             LoadStatistics();
             System.Windows.MessageBox.Show(

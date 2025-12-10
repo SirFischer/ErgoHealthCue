@@ -231,7 +231,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!);
+            var settingsWindow = new SettingsWindow(_settings!, _dataService!, _startupService!, _leaderboardService!);
             if (settingsWindow.ShowDialog() == true)
             {
                 // Reload settings and update scheduler
@@ -252,7 +252,7 @@ public partial class App : Application
     {
         Dispatcher.Invoke(() =>
         {
-            var statsWindow = new StatisticsWindow(_dataService!);
+            var statsWindow = new StatisticsWindow(_dataService!, _leaderboardService!, _settings!);
             statsWindow.ShowDialog();
         });
     }

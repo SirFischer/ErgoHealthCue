@@ -203,9 +203,13 @@ public partial class CueOverlayWindow : Window
         _flashTimer.Stop();
         _countdownTimer.Stop();
         
-        _statistic.CompletedAt = DateTime.Now;
-        _statistic.WasCompleted = true;
-        _dataService.AddStatistic(_statistic);
+        // Only save statistics for non-manual cues
+        if (!_isManualTrigger)
+        {
+            _statistic.CompletedAt = DateTime.Now;
+            _statistic.WasCompleted = true;
+            _dataService.AddStatistic(_statistic);
+        }
         
         // Award XP (only if not manually triggered)
         if (!_isManualTrigger && _potentialXP > 0)
@@ -247,9 +251,13 @@ public partial class CueOverlayWindow : Window
         _flashTimer.Stop();
         _countdownTimer.Stop();
         
-        _statistic.DismissedAt = DateTime.Now;
-        _statistic.WasCompleted = false;
-        _dataService.AddStatistic(_statistic);
+        // Only save statistics for non-manual cues
+        if (!_isManualTrigger)
+        {
+            _statistic.DismissedAt = DateTime.Now;
+            _statistic.WasCompleted = false;
+            _dataService.AddStatistic(_statistic);
+        }
         
         // Apply XP penalty (only if not manually triggered)
         if (!_isManualTrigger && _penaltyXP > 0)
