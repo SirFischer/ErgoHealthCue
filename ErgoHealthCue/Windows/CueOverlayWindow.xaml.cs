@@ -28,6 +28,7 @@ public partial class CueOverlayWindow : Window
     private readonly DispatcherTimer _flashTimer;
     private readonly DispatcherTimer _countdownTimer;
     private readonly XPCalculator _xpCalculator;
+    private readonly LeaderboardService? _leaderboardService;
     private bool _isFlashOn = true;
     private int _remainingSeconds = 300; // 5 minutes
     private int _potentialXP;
@@ -36,7 +37,7 @@ public partial class CueOverlayWindow : Window
     private int _previousLevel;
     private bool _isManualTrigger;
 
-    public CueOverlayWindow(Cue cue, DataService dataService, CueScheduler scheduler, AppSettings settings, bool isManualTrigger = false)
+    public CueOverlayWindow(Cue cue, DataService dataService, CueScheduler scheduler, AppSettings settings, bool isManualTrigger = false, LeaderboardService? leaderboardService = null)
     {
         InitializeComponent();
         _cue = cue;
@@ -46,6 +47,7 @@ public partial class CueOverlayWindow : Window
         _xpCalculator = new XPCalculator();
         _previousLevel = settings.Progress.Level;
         _isManualTrigger = isManualTrigger;
+        _leaderboardService = leaderboardService;
 
         TitleText.Text = cue.Title;
         DescriptionText.Text = cue.Description;
@@ -217,6 +219,9 @@ public partial class CueOverlayWindow : Window
             
             _dataService.SaveSettings(_settings);
             
+            // Update leaderboard asynchronously
+            _ = UpdateLeaderboardAsync();
+            
             // Show badge notifications
             foreach (var badge in newBadges)
             {
@@ -254,6 +259,9 @@ public partial class CueOverlayWindow : Window
             _settings.Progress.BreakStreak();
             
             _dataService.SaveSettings(_settings);
+            
+            // Update leaderboard asynchronously
+            _ = UpdateLeaderboardAsync();
         }
         
         Close();
@@ -277,6 +285,9 @@ public partial class CueOverlayWindow : Window
             _settings.Progress.BreakStreak();
             
             _dataService.SaveSettings(_settings);
+            
+            // Update leaderboard asynchronously
+            _ = UpdateLeaderboardAsync();
             
             System.Windows.MessageBox.Show(
                 $"Time's up! You lost {_penaltyXP} XP for not completing the exercise.\nYour streak has been broken!",
@@ -345,6 +356,31 @@ public partial class CueOverlayWindow : Window
         if (newPosition.HasValue)
         {
             _scheduler.UpdatePosition(newPosition.Value);
+        }
+    }
+    
+    private async Task UpdateLeaderboardAsync()
+    {
+        if (_leaderboardService == null)
+        {
+            return;
+        }
+        
+        try
+        {
+            var statistics = _dataService.LoadStatistics();
+            var completedCount = statistics.Count(s => s.WasCompleted);
+            var dismissedCount = statistics.Count(s => !s.WasCompleted);
+            
+            await _leaderboardService.UpdateLeaderboardAsync(
+                _settings.Progress,
+                completedCount,
+                dismissedCount
+            );
+        }
+        catch
+        {
+            // Silently fail - don't interrupt the user experience
         }
     }
 }

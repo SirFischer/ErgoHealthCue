@@ -66,6 +66,10 @@ public partial class SettingsWindow : Window
             }
         }
         
+        // Load leaderboard settings
+        LeaderboardEnabledCheckBox.IsChecked = _settings.LeaderboardEnabled;
+        UsernameTextBox.Text = _settings.Username;
+        
         // Set current position
         switch (_settings.CurrentPosition)
         {
@@ -343,6 +347,17 @@ public partial class SettingsWindow : Window
         bool startupEnabled = StartupCheckBox.IsChecked ?? false;
         _startupService.SetStartup(startupEnabled);
         
+        // Save leaderboard settings
+        _settings.LeaderboardEnabled = LeaderboardEnabledCheckBox.IsChecked ?? false;
+        _settings.Username = UsernameTextBox.Text?.Trim() ?? string.Empty;
+        
+        // Validate username if leaderboard is enabled
+        if (_settings.LeaderboardEnabled && string.IsNullOrWhiteSpace(_settings.Username))
+        {
+            MessageBox.Show("Please enter a username to enable the leaderboard.", "Username Required", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        
         // Save to disk
         _dataService.SaveSettings(_settings);
         
@@ -354,5 +369,18 @@ public partial class SettingsWindow : Window
     {
         DialogResult = false;
         Close();
+    }
+    
+    private void ViewLeaderboardButton_Click(object sender, RoutedEventArgs e)
+    {
+        // Create a temporary leaderboard service to view leaderboard
+        var leaderboardService = new LeaderboardService(
+            _settings.UserId,
+            _settings.Username,
+            _settings.LeaderboardEnabled
+        );
+        
+        var leaderboardWindow = new LeaderboardWindow(leaderboardService, _settings);
+        leaderboardWindow.ShowDialog();
     }
 }

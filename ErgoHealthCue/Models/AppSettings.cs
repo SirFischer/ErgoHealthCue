@@ -22,4 +22,9 @@ public class AppSettings
     public string Language { get; set; } = "auto"; // "auto", "no", "en", "fr"
     public List<Cue> Cues { get; set; } = new();
     public UserProgress Progress { get; set; } = new();
+    
+    // Leaderboard settings
+    public bool LeaderboardEnabled { get; set; } = false;
+    public string Username { get; set; } = string.Empty;
+    public string UserId { get; set; } = Guid.NewGuid().ToString();
 }
