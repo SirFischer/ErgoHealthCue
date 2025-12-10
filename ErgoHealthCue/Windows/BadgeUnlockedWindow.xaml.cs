@@ -18,8 +18,8 @@ public partial class BadgeUnlockedWindow : Window
             BadgeDescriptionText.Text = $"You dismissed {streakRequired} cues in a row. Really? 😏";
             BadgeIcon.Text = "💩"; // Poop emoji for negative badges
             TitleText.Text = "Achievement Unlocked?";
-            TitleText.Foreground = new SolidColorBrush(Color.FromRgb(220, 38, 38)); // Red
-            ContentBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(220, 38, 38)); // Red border
+            TitleText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(220, 38, 38)); // Red
+            ContentBorder.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(220, 38, 38)); // Red border
         }
         else
         {
@@ -27,8 +27,8 @@ public partial class BadgeUnlockedWindow : Window
             BadgeDescriptionText.Text = $"Complete {streakRequired} cues in a row!";
             BadgeIcon.Text = "🏆"; // Trophy for positive badges
             TitleText.Text = "Badge Unlocked!";
-            TitleText.Foreground = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Gold
-            ContentBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(245, 158, 11)); // Gold border
+            TitleText.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(245, 158, 11)); // Gold
+            ContentBorder.BorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(245, 158, 11)); // Gold border
         }
         
         // Start animations
@@ -52,7 +52,7 @@ public partial class BadgeUnlockedWindow : Window
         // Scale up animation
         var scaleTransform = new ScaleTransform(0.5, 0.5);
         ContentBorder.RenderTransform = scaleTransform;
-        ContentBorder.RenderTransformOrigin = new Point(0.5, 0.5);
+        ContentBorder.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
         
         var scaleAnimation = new DoubleAnimation
         {
