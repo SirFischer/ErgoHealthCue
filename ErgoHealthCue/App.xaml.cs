@@ -142,6 +142,8 @@ public partial class App : Application
                 _pauseResumeMenuItem.Text = Strings.PauseCues;
             }
             _notifyIcon!.Text = Strings.AppTitle;
+            // Clear the flag when auto-pause timer ends
+            _wasPausedByUser = false;
         });
     }
 
