@@ -195,8 +195,16 @@ public partial class StatisticsWindow : Window
     private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
     {
         var result = System.Windows.MessageBox.Show(
-            "Are you sure you want to permanently delete all statistics and reset your level?\n\nThis action cannot be undone and will also reset your leaderboard data.",
-            "Reset Statistics & Level",
+            "Are you sure you want to permanently delete all statistics and reset your progress?\n\n" +
+            "This will reset:\n" +
+            "• All statistics history\n" +
+            "• Level back to 1\n" +
+            "• All XP to 0\n" +
+            "• All streaks to 0\n" +
+            "• All unlocked badges\n" +
+            "• Leaderboard data\n\n" +
+            "This action cannot be undone.",
+            "Reset All Progress",
             System.Windows.MessageBoxButton.YesNo,
             System.Windows.MessageBoxImage.Warning);
             
@@ -206,9 +214,9 @@ public partial class StatisticsWindow : Window
             _allStatistics.Clear();
             _dataService.SaveStatistics(_allStatistics);
             
-            // Reset level and XP
+            // Reset progress (level, XP, streaks, badges)
             var settings = _dataService.LoadSettings();
-            settings.Progress = new UserProgress(); // Reset to level 1, 0 XP
+            settings.Progress = new UserProgress(); // Reset everything to defaults
             _dataService.SaveSettings(settings);
             
             // Update leaderboard with reset data
@@ -220,8 +228,9 @@ public partial class StatisticsWindow : Window
             
             LoadStatistics();
             System.Windows.MessageBox.Show(
-                "All statistics and level progress have been reset.",
-                "Success",
+                "All statistics, progress, streaks, and badges have been reset.\n\n" +
+                "Note: You may need to close and reopen progress windows or restart the app to see all changes reflected.",
+                "Reset Complete",
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Information);
         }
