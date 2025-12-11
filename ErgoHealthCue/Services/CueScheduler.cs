@@ -17,6 +17,8 @@ public class CueScheduler
     private DateTime _positionTimerStartTime;
     private TimeSpan _exerciseTimerInterval;
     private TimeSpan _positionTimerInterval;
+    private TimeSpan _exerciseTimeRemainingWhenPaused;
+    private TimeSpan _positionTimeRemainingWhenPaused;
     
     private static readonly HashSet<CueType> PositionChangeCueTypes = new()
     {
@@ -95,6 +97,11 @@ public class CueScheduler
 
     public void Pause()
     {
+        // Capture remaining time BEFORE setting _isPaused to true
+        // (ExerciseTimeRemaining returns zero when _isPaused is true)
+        _exerciseTimeRemainingWhenPaused = ExerciseTimeRemaining;
+        _positionTimeRemainingWhenPaused = PositionTimeRemaining;
+        
         _isPaused = true;
         _exerciseTimer.Stop();
         _positionTimer.Stop();
@@ -103,6 +110,11 @@ public class CueScheduler
     
     public void Pause(TimeSpan duration)
     {
+        // Capture remaining time BEFORE setting _isPaused to true
+        // (ExerciseTimeRemaining returns zero when _isPaused is true)
+        _exerciseTimeRemainingWhenPaused = ExerciseTimeRemaining;
+        _positionTimeRemainingWhenPaused = PositionTimeRemaining;
+        
         _isPaused = true;
         _exerciseTimer.Stop();
         _positionTimer.Stop();
@@ -117,8 +129,35 @@ public class CueScheduler
         _isPaused = false;
         _pauseTimer?.Stop();
         var now = DateTime.UtcNow;
-        _exerciseTimerStartTime = now;
-        _positionTimerStartTime = now;
+        
+        // Restore timers with remaining time from when we paused
+        // If we have remaining time saved, use it; otherwise start fresh
+        if (_exerciseTimeRemainingWhenPaused > TimeSpan.Zero)
+        {
+            _exerciseTimer.Interval = _exerciseTimeRemainingWhenPaused;
+            _exerciseTimerStartTime = now;
+            _exerciseTimerInterval = _exerciseTimeRemainingWhenPaused;
+        }
+        else
+        {
+            _exerciseTimerStartTime = now;
+        }
+        
+        if (_positionTimeRemainingWhenPaused > TimeSpan.Zero)
+        {
+            _positionTimer.Interval = _positionTimeRemainingWhenPaused;
+            _positionTimerStartTime = now;
+            _positionTimerInterval = _positionTimeRemainingWhenPaused;
+        }
+        else
+        {
+            _positionTimerStartTime = now;
+        }
+        
+        // Clear saved remaining time
+        _exerciseTimeRemainingWhenPaused = TimeSpan.Zero;
+        _positionTimeRemainingWhenPaused = TimeSpan.Zero;
+        
         _exerciseTimer.Start();
         _positionTimer.Start();
     }
