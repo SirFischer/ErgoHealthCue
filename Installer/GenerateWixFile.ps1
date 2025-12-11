@@ -48,7 +48,9 @@ $wxsContent = @"
     Version="$Version" 
     UpgradeCode="A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D"
     Language="1033"
-    Codepage="1252">
+    Codepage="1252"
+    InstallerVersion="200"
+    Scope="perUser">
     
     <SummaryInformation 
       Keywords="Installer"
