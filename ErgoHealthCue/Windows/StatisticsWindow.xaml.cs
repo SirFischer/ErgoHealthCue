@@ -215,13 +215,14 @@ public partial class StatisticsWindow : Window
             _dataService.SaveStatistics(_allStatistics);
             
             // Reset progress (level, XP, streaks, badges)
-            var settings = _dataService.LoadSettings();
-            settings.Progress = new UserProgress(); // Reset everything to defaults
-            _dataService.SaveSettings(settings);
+            // Important: Reset the in-memory settings object directly to ensure
+            // the changes are reflected throughout the application
+            _settings.Progress = new UserProgress(); // Reset everything to defaults
+            _dataService.SaveSettings(_settings);
             
             // Update leaderboard with reset data
             _ = _leaderboardService.UpdateLeaderboardAsync(
-                settings.Progress,
+                _settings.Progress,
                 0, // 0 completed cues
                 0  // 0 dismissed cues
             );
