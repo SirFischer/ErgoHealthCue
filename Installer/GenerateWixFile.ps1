@@ -65,7 +65,7 @@ $wxsContent = @"
     <Media Id="1" Cabinet="ErgoHealthCue.cab" EmbedCab="yes" />
 
     <!-- Installation Directory Structure -->
-    <StandardDirectory Id="ProgramFiles6432Folder">
+    <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="INSTALLFOLDER" Name="ErgoHealthCue">
         <!-- Main Executable -->
         <Component Id="MainExecutable" Bitness="always64">
