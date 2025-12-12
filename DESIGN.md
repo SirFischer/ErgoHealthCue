@@ -90,13 +90,22 @@ Displays all available cues with columns:
 ---
 
 ### 4. Statistics Window (StatisticsWindow.xaml)
-**Dimensions**: 800x500 pixels
+**Dimensions**: 900x600 pixels
 
 **Summary Section**:
-Three columns displaying:
+Five columns displaying:
+- **Level** - Current user level (1-100)
+- **Progress** - Progress to next level (percentage and XP)
 - **Total Cues** - Total number of cues shown
 - **Completed** (green) - Number of completed cues
 - **Dismissed** (red) - Number of dismissed cues
+
+**Streak and Badges Section**:
+Two cards displaying:
+- **Current Streak** - Number of consecutive completed cues and best streak record
+- **Badges Unlocked** - Count of unlocked badges (out of 113 total)
+  - Shows names of unlocked badges
+  - **Clickable** - Opens Badge List Window when clicked
 
 **History Section (DataGrid)**:
 Shows all cue interactions with columns:
@@ -106,8 +115,53 @@ Shows all cue interactions with columns:
 - **Status** - "Completed" or "Dismissed"
 - **Response Time** - Time taken to respond (seconds/minutes/hours)
 
-**Button**:
+**Buttons**:
+- **Reset Statistics** - Resets all progress data
 - **Close** - Closes the statistics window
+
+---
+
+### 5. Badge List Window (BadgeListWindow.xaml)
+**Dimensions**: 800x650 pixels
+
+Opens when clicking on the badge count in the Statistics Window.
+
+**Header**:
+- Displays title "🏆 Badge Achievements"
+- Shows unlocked badge count (e.g., "5 / 113 badges unlocked")
+
+**Filter Options**:
+- **All Badges** - Shows all 113 badges (default)
+- **Achievement Badges** - Shows only positive badges (100 total)
+- **Negative Badges** - Shows only negative badges (13 total)
+- **Unlocked Only** - Shows only earned badges
+
+**Badge Display**:
+Each badge is displayed as a card showing:
+- **Icon** - 🏆 for unlocked positive badges, 💩 for unlocked negative badges, 🔒 for locked badges
+- **Name** - Badge name (colored gold for unlocked positive, red for unlocked negative, grey for locked)
+- **Requirement** - Shows requirement for unlocked badges (e.g., "Complete 10 cues in a row"), shows "???" for locked badges
+
+**Badge Types**:
+
+*Positive Achievement Badges (100 total)*:
+- Earned by completing cues in a row
+- Ranges from "First Step" (1 cue) to "Legendary" (10,000 cues)
+- Organized in tiers: Early achievements (1-20), Building momentum (21-40), Consistent effort (41-60), Advanced dedication (61-80), Elite tier (81-100)
+
+*Negative Badges (13 total)*:
+- Earned by dismissing cues in a row (humorous/sarcastic)
+- Ranges from "Rebel 😏" (3 dismissals) to "Back Pain Collector 💀" (200 dismissals)
+- Displayed with poop emoji and red border when unlocked
+
+**Visual Styling**:
+- Unlocked positive badges: Gold border with hover effect
+- Unlocked negative badges: Red border with hover effect
+- Locked badges: Grey background with reduced opacity
+- Cards are arranged in a wrap panel for easy browsing
+
+**Button**:
+- **Close** - Closes the badge list window
 
 ---
 
