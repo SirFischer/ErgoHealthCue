@@ -26,9 +26,29 @@ public partial class App : Application
     private LeaderboardService? _leaderboardService;
     private ToolStripMenuItem? _pauseResumeMenuItem;
     private bool _wasPausedByUser; // Track if pause was user-initiated or automatic
+    private System.Threading.Mutex? _singleInstanceMutex;
+    private bool _mutexAcquired;
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        // Enforce single instance using user-specific mutex name for security
+        var userName = Environment.UserName;
+        var mutexName = $"ErgoHealthCue_SingleInstance_{userName}";
+        bool createdNew;
+        _singleInstanceMutex = new System.Threading.Mutex(true, mutexName, out createdNew);
+        _mutexAcquired = createdNew;
+        
+        if (!createdNew)
+        {
+            // Another instance is already running - release but don't dispose yet
+            // as the other instance owns the mutex
+            MessageBox.Show("ErgoHealthCue is already running. Check your system tray.", 
+                "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+            _singleInstanceMutex = null;
+            Shutdown();
+            return;
+        }
+        
         // Initialize services
         _dataService = new DataService();
         _startupService = new StartupService();
@@ -36,6 +56,7 @@ public partial class App : Application
         
         // Check if this is first launch (no UserId set yet)
         bool isFirstLaunch = string.IsNullOrEmpty(_settings.UserId);
+        bool showWelcomeAfterPrompt = false;
         
         // Show username prompt on first launch or if username is empty
         if (isFirstLaunch || string.IsNullOrWhiteSpace(_settings.Username))
@@ -47,6 +68,7 @@ public partial class App : Application
                 if (isFirstLaunch)
                 {
                     _settings.UserId = Guid.NewGuid().ToString();
+                    showWelcomeAfterPrompt = true; // Show welcome message after first-time setup
                 }
                 
                 _settings.LeaderboardEnabled = promptWindow.LeaderboardEnabled;
@@ -66,6 +88,7 @@ public partial class App : Application
                 _settings.UserId = Guid.NewGuid().ToString();
                 _settings.Username = DataService.GenerateDefaultUsername(_settings.UserId);
                 _dataService.SaveSettings(_settings);
+                showWelcomeAfterPrompt = true; // Show welcome message after first-time setup
             }
         }
         
@@ -102,9 +125,12 @@ public partial class App : Application
             System.Diagnostics.Debug.WriteLine($"Failed to subscribe to session events: {ex.Message}");
         }
         
-        // Show welcome popup on every startup
-        var welcomeWindow = new WelcomeWindow();
-        welcomeWindow.Show();
+        // Show welcome popup on first launch after username setup, or on every regular startup
+        if (showWelcomeAfterPrompt || !isFirstLaunch)
+        {
+            var welcomeWindow = new WelcomeWindow();
+            welcomeWindow.Show();
+        }
         
         // Don't show main window on startup
         MainWindow = new MainWindow();
@@ -349,6 +375,31 @@ public partial class App : Application
         
         _notifyIcon?.Dispose();
         _scheduler?.Stop();
+        
+        // Release and dispose mutex only if it was successfully acquired
+        if (_mutexAcquired && _singleInstanceMutex != null)
+        {
+            try
+            {
+                _singleInstanceMutex.ReleaseMutex();
+            }
+            catch (Exception ex)
+            {
+                // Silently handle mutex release errors during shutdown
+                System.Diagnostics.Debug.WriteLine($"Failed to release mutex: {ex.Message}");
+            }
+            finally
+            {
+                try
+                {
+                    _singleInstanceMutex?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to dispose mutex: {ex.Message}");
+                }
+            }
+        }
     }
 }
 
