@@ -284,10 +284,21 @@
                    BorderBrush="#E5E7EB" 
                    BorderThickness="1" 
                    CornerRadius="12" 
-                   Padding="20">
+                   Padding="20"
+                   Cursor="Hand"
+                   MouseLeftButtonDown="BadgesCard_Click">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.05" Color="#F59E0B"/>
                 </Border.Effect>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFFBEB"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <StackPanel>
                     <TextBlock Text="🏆 Badges Unlocked" 
                               FontSize="18" 
@@ -310,6 +321,12 @@
                               TextAlignment="Center"
                               Margin="0,8,0,0"
                               MaxWidth="300"/>
+                    <TextBlock Text="Click to view all badges" 
+                              FontSize="10" 
+                              Foreground="#9CA3AF"
+                              HorizontalAlignment="Center"
+                              Margin="0,8,0,0"
+                              FontStyle="Italic"/>
                 </StackPanel>
             </Border>
         </Grid>

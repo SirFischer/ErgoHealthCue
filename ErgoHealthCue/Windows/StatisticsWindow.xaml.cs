@@ -192,6 +192,16 @@ public partial class StatisticsWindow : Window
         Close();
     }
 
+    private void BadgesCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        var settings = _dataService.LoadSettings();
+        var badgeListWindow = new BadgeListWindow(settings.Progress)
+        {
+            Owner = this
+        };
+        badgeListWindow.ShowDialog();
+    }
+
     private void ResetStatisticsButton_Click(object sender, RoutedEventArgs e)
     {
         var result = System.Windows.MessageBox.Show(
