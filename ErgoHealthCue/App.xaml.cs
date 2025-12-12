@@ -40,10 +40,10 @@ public partial class App : Application
         
         if (!createdNew)
         {
-            // Another instance is already running
+            // Another instance is already running - release but don't dispose yet
+            // as the other instance owns the mutex
             MessageBox.Show("ErgoHealthCue is already running. Check your system tray.", 
                 "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
-            _singleInstanceMutex?.Dispose();
             _singleInstanceMutex = null;
             Shutdown();
             return;
@@ -388,8 +388,18 @@ public partial class App : Application
                 // Silently handle mutex release errors during shutdown
                 System.Diagnostics.Debug.WriteLine($"Failed to release mutex: {ex.Message}");
             }
+            finally
+            {
+                try
+                {
+                    _singleInstanceMutex?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Failed to dispose mutex: {ex.Message}");
+                }
+            }
         }
-        _singleInstanceMutex?.Dispose();
     }
 }
 
