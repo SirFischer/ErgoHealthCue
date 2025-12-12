@@ -27,19 +27,24 @@ public partial class App : Application
     private ToolStripMenuItem? _pauseResumeMenuItem;
     private bool _wasPausedByUser; // Track if pause was user-initiated or automatic
     private System.Threading.Mutex? _singleInstanceMutex;
+    private bool _mutexAcquired;
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        // Enforce single instance
-        const string mutexName = "ErgoHealthCue_SingleInstance_Mutex";
+        // Enforce single instance using user-specific mutex name for security
+        var userName = Environment.UserName;
+        var mutexName = $"ErgoHealthCue_SingleInstance_{userName}";
         bool createdNew;
         _singleInstanceMutex = new System.Threading.Mutex(true, mutexName, out createdNew);
+        _mutexAcquired = createdNew;
         
         if (!createdNew)
         {
             // Another instance is already running
             MessageBox.Show("ErgoHealthCue is already running. Check your system tray.", 
                 "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+            _singleInstanceMutex?.Dispose();
+            _singleInstanceMutex = null;
             Shutdown();
             return;
         }
@@ -370,7 +375,20 @@ public partial class App : Application
         
         _notifyIcon?.Dispose();
         _scheduler?.Stop();
-        _singleInstanceMutex?.ReleaseMutex();
+        
+        // Release and dispose mutex only if it was successfully acquired
+        if (_mutexAcquired && _singleInstanceMutex != null)
+        {
+            try
+            {
+                _singleInstanceMutex.ReleaseMutex();
+            }
+            catch (Exception ex)
+            {
+                // Silently handle mutex release errors during shutdown
+                System.Diagnostics.Debug.WriteLine($"Failed to release mutex: {ex.Message}");
+            }
+        }
         _singleInstanceMutex?.Dispose();
     }
 }
